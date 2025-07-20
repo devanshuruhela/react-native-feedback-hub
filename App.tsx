@@ -4,18 +4,27 @@
  *
  * @format
  */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import { FeedbackProvider } from './src';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.tsx" />
-    </View>
+      <View style={styles.container}>
+        <FeedbackProvider
+          position="bottomRight"
+          slackWebhook="https://hooks.slack.com/services/XXX/YYY/ZZZ"
+          jiraConfig={{
+            host: 'your-domain.atlassian.net',
+            email: 'your-email@example.com',
+            apiToken: 'your-jira-api-token',
+            projectKey: 'YOURPROJ',
+          }}
+        >
+          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        </FeedbackProvider>
+      </View>
   );
 }
 
