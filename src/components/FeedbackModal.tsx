@@ -19,7 +19,7 @@ import {
 import { useFeedback } from '../context/FeedbackProvider';
 import captureScreen from '../utils/captureScreen';
 import { sendToSlack } from '../Integrations/slack';
-import { sendToJira } from '../Integrations/jira'
+import { sendToJira } from '../Integrations/jira';
 import { useScreenRecorder } from '../hooks/useScreenRecorder';
 import { FeedbackPayload, FeedbackType } from '../types/types';
 import { ModalStyles as styles } from '../Styles/ModalStyle';
@@ -28,27 +28,37 @@ import { useStoragePermission } from '../hooks/useStoragePermision';
 
 const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
   const [type, setType] = useState<FeedbackType>('bug');
-  const { slackWebhook, jiraConfig, toggleRecording , isRecording , title ,message , screenshot ,setMessage ,setScreenshot , setTitle } = useFeedback();
-  const { start, stop, videoUri , setVideoUri } = useScreenRecorder();
+  const {
+    slackWebhook,
+    jiraConfig,
+    toggleRecording,
+    isRecording,
+    title,
+    message,
+    screenshot,
+    setMessage,
+    setScreenshot,
+    setTitle,
+  } = useFeedback();
+  const { start, stop, videoUri, setVideoUri } = useScreenRecorder();
   const { granted, requestPermission } = useStoragePermission();
-  const disableSubmit = !title || !message
+  const disableSubmit = !title || !message;
   useEffect(() => {
     requestPermission();
   }, [requestPermission]);
 
-  const handleRecording = async () =>{
+  const handleRecording = async () => {
     if (!isRecording) {
       const res = await start();
-      if(res === 'started'){
+      if (res === 'started') {
         toggleRecording();
         onClose();
       }
-    }
-    else{
+    } else {
       await stop();
       toggleRecording();
     }
-  }
+  };
 
   const handleCapture = async () => {
     const shot = await captureScreen();
@@ -56,11 +66,11 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
   };
 
   const handleCancelAndClear = () => {
-      setTitle('');
-      setMessage('');
-      setScreenshot('');
-      onClose();
-    };
+    setTitle('');
+    setMessage('');
+    setScreenshot('');
+    onClose();
+  };
 
   const handleSubmit = async () => {
     const payload: FeedbackPayload = {
@@ -75,12 +85,17 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
     handleCancelAndClear();
   };
 
-  if(!granted){
+  if (!granted) {
     return null;
   }
 
   return (
-    <Modal animationType="fade" transparent statusBarTranslucent navigationBarTranslucent>
+    <Modal
+      animationType="fade"
+      transparent
+      statusBarTranslucent
+      navigationBarTranslucent
+    >
       <View style={styles.overlay}>
         <View style={styles.modal}>
           <View style={styles.header}>
@@ -207,7 +222,12 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleSubmit}
-                style={[styles.button, disableSubmit ? styles.primaryButtonDisabled : styles.primaryButton]}
+                style={[
+                  styles.button,
+                  disableSubmit
+                    ? styles.primaryButtonDisabled
+                    : styles.primaryButton,
+                ]}
                 disabled={disableSubmit}
               >
                 <Text style={styles.primaryText}>Send Feedback</Text>

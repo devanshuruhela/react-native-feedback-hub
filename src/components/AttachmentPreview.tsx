@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
-import { X , Image as ImageIcon , Video as VideoIcon } from 'lucide-react-native';
+import { X, Image as ImageIcon, Video as VideoIcon } from 'lucide-react-native';
 import { generateThumbnail } from '../utils/generateThumbnail';
 import { AttachmentStyles as styles } from '../Styles/AttachmentStyle';
 
@@ -30,12 +30,11 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
     fetchThumbnail();
   }, [recordingUri]);
 
-  const handleRemoveRecording = () =>{
+  const handleRemoveRecording = () => {
     setVideoThumbnail(null);
     onRemoveRecording?.();
-  }
+  };
 
-  
   if (!screenshotUri && !recordingUri) return null;
 
   return (

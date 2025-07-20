@@ -1,18 +1,18 @@
 import { Bug, Circle } from 'lucide-react-native';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { feedbackButtonPositionType} from '../types/types';
+import { feedbackButtonPositionType } from '../types/types';
 
 interface FloatingButtonProps {
   onPress: () => void;
-  buttonPosition?: feedbackButtonPositionType
-  isRecording?: boolean
+  buttonPosition?: feedbackButtonPositionType;
+  isRecording?: boolean;
 }
 
 const FloatingButton = ({
   onPress,
   buttonPosition,
-  isRecording
+  isRecording,
 }: FloatingButtonProps) => {
   const styles = useMemo(
     () =>
@@ -41,4 +41,3 @@ const FloatingButton = ({
 };
 
 export default React.memo(FloatingButton);
-

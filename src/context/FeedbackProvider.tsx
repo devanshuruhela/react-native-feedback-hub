@@ -2,7 +2,11 @@ import React, { createContext, useCallback, useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import FloatingButton from '../components/FloatingButton';
 import FeedbackModal from '../components/FeedbackModal';
-import { feedbackButtonPositionType, FeedbackContextType, JiraConfig } from '../types/types';
+import {
+  feedbackButtonPositionType,
+  FeedbackContextType,
+  JiraConfig,
+} from '../types/types';
 
 const FeedbackContext = createContext<FeedbackContextType>({
   toggleModal: () => {},
@@ -23,7 +27,7 @@ export const useFeedback = () => useContext(FeedbackContext);
 interface FeedbackProviderProps {
   children: React.ReactNode;
   slackWebhook?: string;
-  feedbackButtonPosition?: feedbackButtonPositionType
+  feedbackButtonPosition?: feedbackButtonPositionType;
   jiraConfig?: JiraConfig;
 }
 
@@ -42,16 +46,11 @@ export const FeedbackProvider = ({
   const [message, setMessage] = useState('');
   const [screenshot, setScreenshot] = useState<string | null>(null);
 
-  const toggleModal = useCallback(
-    () => setVisible(!visible),
-    [visible],
-  )
+  const toggleModal = useCallback(() => setVisible(!visible), [visible]);
   const toggleRecording = useCallback(
     () => setIsRecording(!isRecording),
     [isRecording],
-  )
- ;
-
+  );
   return (
     <FeedbackContext.Provider
       value={{
@@ -65,12 +64,18 @@ export const FeedbackProvider = ({
         screenshot,
         setTitle,
         setMessage,
-        setScreenshot
+        setScreenshot,
       }}
     >
       <View style={styles.flex}>
         {children}
-        {<FloatingButton buttonPosition={feedbackButtonPosition} onPress={toggleModal} isRecording={isRecording} />}
+        {
+          <FloatingButton
+            buttonPosition={feedbackButtonPosition}
+            onPress={toggleModal}
+            isRecording={isRecording}
+          />
+        }
         {visible && <FeedbackModal onClose={toggleModal} />}
         {isRecording && <View style={styles.RecordingView} />}
       </View>
@@ -78,17 +83,16 @@ export const FeedbackProvider = ({
   );
 };
 
-
 const styles = StyleSheet.create({
-    flex:{
-      flex:1,
-    },
-    RecordingView:{
-      position:'absolute',
-      borderWidth: 2,
-      borderColor: 'red',
-      borderRadius: 40,
-      height: '100%',
-      width: '100%',
-    }
-  })
+  flex: {
+    flex: 1,
+  },
+  RecordingView: {
+    position: 'absolute',
+    borderWidth: 2,
+    borderColor: 'red',
+    borderRadius: 40,
+    height: '100%',
+    width: '100%',
+  },
+});

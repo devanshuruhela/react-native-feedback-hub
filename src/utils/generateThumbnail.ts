@@ -4,7 +4,7 @@ export const generateThumbnail = async (videoPath: string) => {
   try {
     const fileUri = `file://${videoPath}`;
     const { path } = await createThumbnail({ url: fileUri });
-    return path
+    return path;
   } catch (err) {
     console.error('Thumbnail error:', err);
   }
