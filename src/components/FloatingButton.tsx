@@ -1,37 +1,44 @@
-import React from 'react';
-import { TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { Bug, Circle } from 'lucide-react-native';
+import React, { useMemo } from 'react';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { feedbackButtonPositionType} from '../types/types';
 
 interface FloatingButtonProps {
   onPress: () => void;
-  position: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
+  buttonPosition?: feedbackButtonPositionType
+  isRecording?: boolean
 }
 
 const FloatingButton = ({
   onPress,
-  position,
+  buttonPosition,
+  isRecording
 }: FloatingButtonProps) => {
-  const styles = StyleSheet.create({
-    button: {
-      position: 'absolute',
-      bottom: position.includes('bottom') ? 30 : undefined,
-      top: position.includes('top') ? 30 : undefined,
-      right: position.includes('Right') ? 20 : undefined,
-      left: position.includes('Left') ? 20 : undefined,
-      backgroundColor:'#333',
-      padding: 10,
-      borderRadius: 30,
-      zIndex: 9999,
-    },
-    color: {
-      color: 'white',
-    },
-  });
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        button: {
+          position: 'absolute',
+          backgroundColor: isRecording ? '#c71f1f' : '#333',
+          padding: isRecording ? 16 : 20,
+          borderRadius: isRecording ? 20 : 25,
+          zIndex: 9999,
+          ...buttonPosition,
+        },
+      }),
+    [buttonPosition, isRecording],
+  );
 
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.color}>{'✉️'}</Text>
+      {isRecording ? (
+        <Circle size={24} color={'#9c2020'} fill={'#9c2020'} />
+      ) : (
+        <Bug size={24} color={'#9ca3af'} />
+      )}
     </TouchableOpacity>
   );
 };
 
-export default FloatingButton;
+export default React.memo(FloatingButton);
+

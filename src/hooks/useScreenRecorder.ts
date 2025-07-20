@@ -13,6 +13,7 @@ export function useScreenRecorder() {
 
   const start = async (): Promise<string | null> => {
     const res = await RecordScreen.startRecording({mic: false});
+    console.log(res);
     if(res === RecordingResult.PermissionError){
       return null;  
     }
@@ -21,7 +22,6 @@ export function useScreenRecorder() {
   
   const stop = async (): Promise<string | null> => {
     const res = await RecordScreen.stopRecording() as StopRecordingResult;
-    console.log(res)
     if (res && res.result?.outputURL) {
       setVideoUri(res.result.outputURL);
       return res.result.outputURL;
@@ -29,5 +29,5 @@ export function useScreenRecorder() {
     return null;
   };
 
-  return { start, stop, videoUri };
+  return { start, stop, videoUri , setVideoUri };
 }

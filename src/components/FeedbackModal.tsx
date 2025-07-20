@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  // Dimensions,
   Modal,
   Pressable,
 } from 'react-native';
@@ -19,27 +18,31 @@ import {
 } from 'lucide-react-native';
 import { useFeedback } from '../context/FeedbackProvider';
 import captureScreen from '../utils/captureScreen';
-import { sendToSlack } from '../utils/slack';
-import { sendToJira } from '../utils/jira'
+import { sendToSlack } from '../Integrations/slack';
+import { sendToJira } from '../Integrations/jira'
 import { useScreenRecorder } from '../hooks/useScreenRecorder';
 import { FeedbackPayload, FeedbackType } from '../types/types';
 import { ModalStyles as styles } from '../Styles/ModalStyle';
-
-// const { width } = Dimensions.get('window');
+import AttachmentPreview from './AttachmentPreview';
+import { useStoragePermission } from '../hooks/useStoragePermision';
 
 const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
   const [type, setType] = useState<FeedbackType>('bug');
-  const [title, setTitle] = useState('');
-  const [message, setMessage] = useState('');
-  const [screenshot, setScreenshot] = useState<string | null>(null);
-
-  const { slackWebhook, jiraConfig, toggleRecording , isRecording } = useFeedback();
-  const { start, stop, videoUri } = useScreenRecorder();
+  const { slackWebhook, jiraConfig, toggleRecording , isRecording , title ,message , screenshot ,setMessage ,setScreenshot , setTitle } = useFeedback();
+  const { start, stop, videoUri , setVideoUri } = useScreenRecorder();
+  const { granted, requestPermission } = useStoragePermission();
+  const disableSubmit = !title || !message
+  useEffect(() => {
+    requestPermission();
+  }, [requestPermission]);
 
   const handleRecording = async () =>{
     if (!isRecording) {
-      await start();
-      toggleRecording();
+      const res = await start();
+      if(res === 'started'){
+        toggleRecording();
+        onClose();
+      }
     }
     else{
       await stop();
@@ -52,6 +55,13 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
     setScreenshot(shot);
   };
 
+  const handleCancelAndClear = () => {
+      setTitle('');
+      setMessage('');
+      setScreenshot('');
+      onClose();
+    };
+
   const handleSubmit = async () => {
     const payload: FeedbackPayload = {
       title,
@@ -62,11 +72,15 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
     };
     if (slackWebhook) await sendToSlack(payload, slackWebhook);
     if (jiraConfig) await sendToJira(payload, jiraConfig);
-    onClose();
+    handleCancelAndClear();
   };
 
+  if(!granted){
+    return null;
+  }
+
   return (
-    <Modal animationType="fade" transparent>
+    <Modal animationType="fade" transparent statusBarTranslucent navigationBarTranslucent>
       <View style={styles.overlay}>
         <View style={styles.modal}>
           <View style={styles.header}>
@@ -103,7 +117,7 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
               >
                 <Lightbulb
                   size={16}
-                  color={type === 'suggestion' ? '#1e40af' : '#374151'}
+                  color={type === 'suggestion' ? '#25af1e' : '#374151'}
                 />
                 <Text
                   style={[
@@ -146,7 +160,10 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
                 <Text style={styles.attachmentText}> Screenshot</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.attachmentButton, isRecording && styles.recording]}
+                style={[
+                  styles.attachmentButton,
+                  isRecording && styles.recording,
+                ]}
                 onPress={handleRecording}
               >
                 {isRecording ? (
@@ -160,7 +177,7 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
                     isRecording && styles.recordingText,
                   ]}
                 >
-                  {isRecording ? ' Stop Recording' : ' Screen Record'}
+                  {isRecording ? ' Stop Recording' : ' Record Screen'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -175,16 +192,23 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
               </View>
             )}
 
+            <AttachmentPreview
+              screenshotUri={screenshot}
+              recordingUri={videoUri}
+              onRemoveScreenshot={() => setScreenshot(null)}
+              onRemoveRecording={() => setVideoUri(null)}
+            />
             <View style={styles.actions}>
               <TouchableOpacity
-                onPress={onClose}
+                onPress={handleCancelAndClear}
                 style={[styles.button, styles.secondaryButton]}
               >
                 <Text style={styles.secondaryText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleSubmit}
-                style={[styles.button, styles.primaryButton]}
+                style={[styles.button, disableSubmit ? styles.primaryButtonDisabled : styles.primaryButton]}
+                disabled={disableSubmit}
               >
                 <Text style={styles.primaryText}>Send Feedback</Text>
               </TouchableOpacity>
@@ -196,4 +220,4 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export default FeedbackPopover;
+export default React.memo(FeedbackPopover);

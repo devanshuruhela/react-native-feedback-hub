@@ -1,35 +1,56 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import FloatingButton from '../components/FloatingButton';
 import FeedbackModal from '../components/FeedbackModal';
-import { FeedbackContextType, JiraConfig } from '../types/types';
+import { feedbackButtonPositionType, FeedbackContextType, JiraConfig } from '../types/types';
 
 const FeedbackContext = createContext<FeedbackContextType>({
   toggleModal: () => {},
   toggleRecording: () => {},
   isRecording: false,
+  title: '',
+  message: '',
+  screenshot: '',
+  setTitle: () => {},
+  setMessage: () => {},
+  setScreenshot: () => {},
+  slackWebhook: undefined,
+  jiraConfig: undefined,
 });
 
 export const useFeedback = () => useContext(FeedbackContext);
 
 interface FeedbackProviderProps {
-  position?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
   children: React.ReactNode;
   slackWebhook?: string;
+  feedbackButtonPosition?: feedbackButtonPositionType
   jiraConfig?: JiraConfig;
 }
 
 export const FeedbackProvider = ({
-  position = 'bottomRight',
+  feedbackButtonPosition = {
+    bottom: 30,
+    right: 30,
+  },
   children,
   slackWebhook,
   jiraConfig,
 }: FeedbackProviderProps) => {
   const [visible, setVisible] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [title, setTitle] = useState('');
+  const [message, setMessage] = useState('');
+  const [screenshot, setScreenshot] = useState<string | null>(null);
 
-  const toggleModal = () => setVisible(!visible);
-  const toggleRecording = () => setIsRecording(!isRecording);
+  const toggleModal = useCallback(
+    () => setVisible(!visible),
+    [visible],
+  )
+  const toggleRecording = useCallback(
+    () => setIsRecording(!isRecording),
+    [isRecording],
+  )
+ ;
 
   return (
     <FeedbackContext.Provider
@@ -39,16 +60,19 @@ export const FeedbackProvider = ({
         jiraConfig,
         isRecording,
         toggleRecording,
+        title,
+        message,
+        screenshot,
+        setTitle,
+        setMessage,
+        setScreenshot
       }}
     >
-      <View style={styles.flex} >
-        {children}        
-        <FloatingButton
-          position={position}
-          onPress={toggleModal}
-        />
+      <View style={styles.flex}>
+        {children}
+        {<FloatingButton buttonPosition={feedbackButtonPosition} onPress={toggleModal} isRecording={isRecording} />}
         {visible && <FeedbackModal onClose={toggleModal} />}
-        {isRecording && <View style={styles.RecordingView}/>}
+        {isRecording && <View style={styles.RecordingView} />}
       </View>
     </FeedbackContext.Provider>
   );
