@@ -25,12 +25,14 @@ import { FeedbackPayload, FeedbackType } from '../types/types';
 import { ModalStyles as styles } from '../Styles/ModalStyle';
 import AttachmentPreview from './AttachmentPreview';
 import { useStoragePermission } from '../hooks/useStoragePermision';
+import { sendToTeams } from '../Integrations/teams';
 
 const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
   const [type, setType] = useState<FeedbackType>('bug');
   const {
-    slackWebhook,
+    slackConfig,
     jiraConfig,
+    microsoftTeamsConfig,
     toggleRecording,
     isRecording,
     title,
@@ -80,8 +82,9 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
       screenshot,
       video: videoUri,
     };
-    if (slackWebhook) await sendToSlack(payload, slackWebhook);
+    if (slackConfig) await sendToSlack(payload, slackConfig);
     if (jiraConfig) await sendToJira(payload, jiraConfig);
+    if (microsoftTeamsConfig) await sendToTeams(payload , microsoftTeamsConfig)
     handleCancelAndClear();
   };
 

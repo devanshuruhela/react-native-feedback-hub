@@ -1,97 +1,124 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 📦 Feedback SDK: Integration Guide
 
-# Getting Started
+This SDK supports sending user feedback to **Slack**, **Jira**, and **Microsoft Teams** along with optional screenshot or video attachments.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## 🧵 Supported Integrations
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- [x] Slack
+- [x] Jira (Atlassian Cloud)
+- [x] Microsoft Teams (Graph API)
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+---
 
-```sh
-# Using npm
-npm start
+## 🔐 Integration Setup & Required Credentials
 
-# OR using Yarn
-yarn start
+### 1️⃣ Slack Integration
+
+#### ✅ Required Inputs
+- Slack **Bot Token**
+- Slack **Channel ID**
+
+#### 🔑 Required Bot Scopes
+
+| Scope         | Description                             |
+|---------------|-----------------------------------------|
+| `chat:write`  | To post feedback messages               |
+| `files:write` | To upload screenshot or video files     |
+
+#### 📌 Setup Steps
+1. Go to [Slack API Portal](https://api.slack.com/apps)
+2. Create a new app or use existing one
+3. Under **OAuth & Permissions**, add the required scopes
+4. Install the app to your workspace and copy the **Bot Token**
+5. Grab your target channel ID from Slack (`Right-click > Copy Channel ID`)
+
+---
+
+### 2️⃣ Jira Integration
+
+#### ✅ Required Inputs
+- Jira **Base URL** (e.g. `https://yourcompany.atlassian.net`)
+- Jira **Email** (associated with API token)
+- Jira **API Token**
+- Jira **Project Key** and optionally a **custom Issue Type**
+
+#### 🔑 Required Permissions
+
+| Permission         | Description                                  |
+|--------------------|----------------------------------------------|
+| **Create Issues**  | To open feedback tickets                     |
+| **Browse Projects**| To access the project and issue types        |
+| **Add Attachments**| To upload screenshots or videos to tickets   |
+
+#### 📌 Setup Steps
+1. Visit [Atlassian API Tokens](https://id.atlassian.com/manage/api-tokens)
+2. Create a new token and copy it
+3. Ensure your user has required project permissions (Admin or Developer)
+4. Provide:
+   - Your Jira email
+   - API token
+   - Base URL (`https://yourdomain.atlassian.net`)
+   - Project key where feedback will be logged
+
+---
+
+### 3️⃣ Microsoft Teams Integration (via Microsoft Graph API)
+
+#### ✅ Required Inputs
+- Microsoft **Access Token** (Graph API)
+- **Team ID**
+- **Channel ID**
+
+#### 🔑 Required Graph API Scopes
+
+| Scope                    | Description                                         |
+|--------------------------|-----------------------------------------------------|
+| `ChannelMessage.Send`    | Send feedback messages to Teams channels            |
+| `Files.ReadWrite.All`    | Upload screenshots/videos to Teams file storage     |
+| `Group.ReadWrite.All`    | Access Teams/channel info and manage messages/files |
+| `Sites.ReadWrite.All`*   | Required for file uploads to SharePoint             |
+
+#### 📌 Setup Options
+- Use [Azure Portal](https://portal.azure.com) to:
+  1. Register a new app
+  2. Enable Microsoft Graph API
+  3. Add the scopes above (delegated or application)
+  4. Get OAuth access token for your user/app
+
+> ⚠️ Microsoft Graph is the most complex setup. We recommend using a user-delegated token to keep integration lightweight.
+
+---
+
+## 🚀 Example Usage
+
+```ts
+sendToSlack(payload, {
+  botToken: 'xoxb-...',
+  channelId: 'C123456'
+});
+
+sendToJira(payload, {
+  email: 'your@email.com',
+  apiToken: 'abc123',
+  baseUrl: 'https://yourdomain.atlassian.net',
+  projectKey: 'SDK'
+});
+
+sendToTeams(payload, {
+  accessToken: 'Bearer eyJ0eXAiOiJK...',
+  teamId: 'e4d4c9a6-...',
+  channelId: '19:abc123@thread.tacv2'
+});
 ```
 
-## Step 2: Build and run your app
+---
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## 📎 Attachment Support
 
-### Android
+Your feedback payload can include:
+- `screenshot`: local image URI (e.g. from screen capture)
+- `video`: local video URI (e.g. from screen recording)
 
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+All platforms will attempt to upload these alongside the feedback text.

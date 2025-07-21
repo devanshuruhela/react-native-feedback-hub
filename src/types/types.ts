@@ -15,11 +15,23 @@ export interface JiraConfig {
   projectKey: string;
 }
 
+export interface SlackConfig {
+  botToken: string;
+  channelId: string;
+}
+
+export interface MicrosoftTeamsConfig {
+  accessToken: string;
+  teamId: string;
+  channelId: string; 
+};
+
 export interface FeedbackContextType {
   toggleModal: () => void;
   toggleRecording: () => void;
-  slackWebhook?: string;
+  slackConfig?: SlackConfig;
   jiraConfig?: JiraConfig;
+  microsoftTeamsConfig?: MicrosoftTeamsConfig
   isRecording: boolean;
   title: string;
   message: string;

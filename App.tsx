@@ -13,13 +13,13 @@ function App() {
   return (
       <View style={styles.container}>
         <FeedbackProvider
-          slackWebhook="https://hooks.slack.com/services/XXX/YYY/ZZZ"
-          jiraConfig={{
-            host: 'your-domain.atlassian.net',
-            email: 'your-email@example.com',
-            apiToken: 'your-jira-api-token',
-            projectKey: 'YOURPROJ',
-          }}
+          slackConfig={{botToken: 'asdsa' , channelId: 'gsfds'}}
+          // jiraConfig={{
+          //   host: 'your-domain.atlassian.net',
+          //   email: 'your-email@example.com',
+          //   apiToken: 'your-jira-api-token',
+          //   projectKey: 'YOURPROJ',
+          // }}
         >
           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         </FeedbackProvider>

@@ -6,6 +6,8 @@ import {
   feedbackButtonPositionType,
   FeedbackContextType,
   JiraConfig,
+  MicrosoftTeamsConfig,
+  SlackConfig,
 } from '../types/types';
 
 const FeedbackContext = createContext<FeedbackContextType>({
@@ -18,17 +20,19 @@ const FeedbackContext = createContext<FeedbackContextType>({
   setTitle: () => {},
   setMessage: () => {},
   setScreenshot: () => {},
-  slackWebhook: undefined,
+  slackConfig: undefined,
   jiraConfig: undefined,
+  microsoftTeamsConfig: undefined,
 });
 
 export const useFeedback = () => useContext(FeedbackContext);
 
 interface FeedbackProviderProps {
   children: React.ReactNode;
-  slackWebhook?: string;
   feedbackButtonPosition?: feedbackButtonPositionType;
   jiraConfig?: JiraConfig;
+  slackConfig?: SlackConfig;
+  microsoftTeamsConfig?: MicrosoftTeamsConfig
 }
 
 export const FeedbackProvider = ({
@@ -37,8 +41,9 @@ export const FeedbackProvider = ({
     right: 30,
   },
   children,
-  slackWebhook,
+  slackConfig,
   jiraConfig,
+  microsoftTeamsConfig,
 }: FeedbackProviderProps) => {
   const [visible, setVisible] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -55,8 +60,9 @@ export const FeedbackProvider = ({
     <FeedbackContext.Provider
       value={{
         toggleModal,
-        slackWebhook,
+        slackConfig,
         jiraConfig,
+        microsoftTeamsConfig,
         isRecording,
         toggleRecording,
         title,
