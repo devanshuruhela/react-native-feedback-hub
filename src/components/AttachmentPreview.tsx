@@ -3,6 +3,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { X, Image as ImageIcon, Video as VideoIcon } from 'lucide-react-native';
 import { generateThumbnail } from '../utils/generateThumbnail';
 import { AttachmentStyles as styles } from '../Styles/AttachmentStyle';
+import { colors } from '../tokens/colors';
 
 interface AttachmentPreviewProps {
   screenshotUri?: string | null;
@@ -42,7 +43,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
       {screenshotUri && (
         <View style={styles.previewBox}>
           <View style={styles.previewTypeIcon}>
-            <ImageIcon size={16} color={'#fff'} />
+            <ImageIcon size={16} color={colors.text.white} />
           </View>
           <Image
             source={{ uri: screenshotUri }}
@@ -53,7 +54,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
             style={styles.removeIcon}
             onPress={onRemoveScreenshot}
           >
-            <X size={16} color="#fff" />
+            <X size={16} color={colors.text.white} />
           </TouchableOpacity>
         </View>
       )}
@@ -61,7 +62,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
       {videoThumbnail && (
         <View style={styles.previewBox}>
           <View style={styles.previewTypeIcon}>
-            <VideoIcon size={16} color={'#fff'} />
+            <VideoIcon size={16} color={colors.text.white} />
           </View>
           <Image
             source={{ uri: videoThumbnail }}
@@ -72,7 +73,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
             style={styles.removeIcon}
             onPress={handleRemoveRecording}
           >
-            <X size={16} color="#fff" />
+            <X size={16} color={colors.text.white} />
           </TouchableOpacity>
         </View>
       )}

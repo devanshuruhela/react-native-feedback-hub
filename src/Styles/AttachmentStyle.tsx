@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../tokens/colors';
 
 export const AttachmentStyles = StyleSheet.create({
   previewContainer: {
@@ -11,7 +12,7 @@ export const AttachmentStyles = StyleSheet.create({
     position: 'relative',
     width: 100,
     height: 100,
-    backgroundColor: '#111827',
+    backgroundColor: colors.background.tertiary,
     borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center',
@@ -25,14 +26,14 @@ export const AttachmentStyles = StyleSheet.create({
   },
   recordingFileText: {
     fontSize: 12,
-    color: '#d1d5db',
+    color: colors.text.secondary,
     marginTop: 4,
   },
   removeIcon: {
     position: 'absolute',
     top: 4,
     right: 4,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: colors.background.overlayLight,
     borderRadius: 10,
     padding: 2,
   },
@@ -40,7 +41,7 @@ export const AttachmentStyles = StyleSheet.create({
     position: 'absolute',
     top: 5,
     left: 5,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: colors.background.overlayLight,
     borderRadius: 10,
     padding: 2,
     zIndex: 2,

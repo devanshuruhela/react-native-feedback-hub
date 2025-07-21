@@ -2,6 +2,7 @@ import { Bug, Circle } from 'lucide-react-native';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { feedbackButtonPositionType } from '../types/types';
+import { colors } from '../tokens/colors';
 
 interface FloatingButtonProps {
   onPress: () => void;
@@ -19,7 +20,7 @@ const FloatingButton = ({
       StyleSheet.create({
         button: {
           position: 'absolute',
-          backgroundColor: isRecording ? '#c71f1f' : '#333',
+          backgroundColor: isRecording ? colors.interactive.recording : colors.interactive.floating,
           padding: isRecording ? 16 : 20,
           borderRadius: isRecording ? 20 : 25,
           zIndex: 9999,
@@ -32,9 +33,9 @@ const FloatingButton = ({
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       {isRecording ? (
-        <Circle size={24} color={'#9c2020'} fill={'#9c2020'} />
+        <Circle size={24} color={colors.interactive.recording} fill={colors.interactive.recordingHover} />
       ) : (
-        <Bug size={24} color={'#9ca3af'} />
+        <Bug size={24} color={colors.text.muted} />
       )}
     </TouchableOpacity>
   );

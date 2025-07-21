@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import FloatingButton from '../components/FloatingButton';
 import FeedbackModal from '../components/FeedbackModal';
+import { colors } from '../tokens/colors';
 import {
   feedbackButtonPositionType,
   FeedbackContextType,
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
   RecordingView: {
     position: 'absolute',
     borderWidth: 2,
-    borderColor: 'red',
+    borderColor: colors.legacy.red,
     borderRadius: 40,
     height: '100%',
     width: '100%',

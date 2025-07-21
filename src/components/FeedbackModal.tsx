@@ -30,6 +30,7 @@ import { ModalStyles as styles } from '../Styles/ModalStyle';
 import AttachmentPreview from './AttachmentPreview';
 import { useStoragePermission } from '../hooks/useStoragePermision';
 import { sendToTeams } from '../Integrations/teams';
+import { colors } from '../tokens/colors';
 
 const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
   const [type, setType] = useState<FeedbackType>('bug');
@@ -139,7 +140,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
           <View style={styles.header}>
             <Text style={styles.title}>Send Feedback</Text>
             <Pressable onPress={onClose}>
-              <X color="#9ca3af" />
+              <X color={colors.text.muted} />
             </Pressable>
           </View>
           <ScrollView ref={scrollViewRef}>
@@ -155,7 +156,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                 >
                   <Bug
                     size={16}
-                    color={type === 'bug' ? '#991b1b' : '#374151'}
+                    color={type === 'bug' ? colors.status.error.text : colors.text.inverse}
                   />
                   <Text
                     style={[
@@ -176,7 +177,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                 >
                   <Lightbulb
                     size={16}
-                    color={type === 'suggestion' ? '#25af1e' : '#374151'}
+                    color={type === 'suggestion' ? colors.status.success.text : colors.text.inverse}
                   />
                   <Text
                     style={[
@@ -196,7 +197,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                 onChangeText={setTitle}
                 style={styles.input}
                 placeholder="Brief description of the issue or suggestion"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor={colors.text.muted}
                 enterKeyHint="done"
                 submitBehavior="blurAndSubmit"
               />
@@ -207,7 +208,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                 onChangeText={setMessage}
                 style={[styles.input, styles.textarea]}
                 placeholder="Please provide more details about your feedback..."
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor={colors.text.muted}
                 multiline
                 scrollEnabled
                 enterKeyHint="done"
@@ -220,7 +221,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                   style={styles.attachmentButton}
                   onPress={handleCapture}
                 >
-                  <Camera size={16} color="#9ca3af" />
+                  <Camera size={16} color={colors.text.muted} />
                   <Text style={styles.attachmentText}> Screenshot</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -231,9 +232,9 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                   onPress={handleRecording}
                 >
                   {isRecording ? (
-                    <Square size={16} color="#991b1b" />
+                    <Square size={16} color={colors.status.error.text} />
                   ) : (
-                    <Video size={16} color="#9ca3af" />
+                    <Video size={16} color={colors.text.muted} />
                   )}
                   <Text
                     style={[
@@ -248,7 +249,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
 
               {isRecording && (
                 <View style={styles.recordingIndicator}>
-                  <Circle size={12} color="#dc2626" fill="#dc2626" />
+                  <Circle size={12} color={colors.status.warning.text} fill={colors.status.warning.text} />
                   <Text style={styles.recordingLabel}>
                     {' '}
                     Recording in progress...
@@ -283,7 +284,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                   disabled={disableSubmit || isPending}
                 >
                   {isPending ? (
-                    <ActivityIndicator color="#fff" />
+                    <ActivityIndicator color={colors.text.white} />
                   ) : (
                     <Text style={styles.primaryText}>Send Feedback</Text>
                   )}
@@ -292,9 +293,9 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
               {status && (
                 <View style={styles.statusNudge}>
                   {status === 'success' ? (
-                    <CircleCheck size={15} color="#10B981" />
+                    <CircleCheck size={15} color={colors.status.success.text} />
                   ) : (
-                    <CircleX size={15} color={'#EF4444'} />
+                    <CircleX size={15} color={colors.status.error.text} />
                   )}
                   <Text
                     style={

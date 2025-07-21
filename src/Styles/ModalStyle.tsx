@@ -1,15 +1,16 @@
 import { StyleSheet } from 'react-native';
+import { colors } from '../tokens/colors';
 
 export const ModalStyles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: colors.background.overlay,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
   },
   modal: {
-    backgroundColor: '#1f2937',
+    backgroundColor: colors.background.primary,
     borderRadius: 8,
     width: '100%',
     maxWidth: 450,
@@ -22,12 +23,12 @@ export const ModalStyles = StyleSheet.create({
     alignItems: 'center',
     padding: 24,
     borderBottomWidth: 1,
-    borderColor: '#374151',
+    borderColor: colors.border.default,
   },
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#f9fafb',
+    color: colors.text.primary,
   },
   form: {
     padding: 24,
@@ -35,7 +36,7 @@ export const ModalStyles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#d1d5db',
+    color: colors.text.secondary,
     marginBottom: 8,
   },
   typeButtons: {
@@ -50,36 +51,36 @@ export const ModalStyles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#d1d5db',
-    backgroundColor: '#f9fafb',
+    borderColor: colors.border.light,
+    backgroundColor: colors.text.primary,
     marginRight: 8,
   },
   activeBug: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fecaca',
+    backgroundColor: colors.status.error.background,
+    borderColor: colors.status.error.border,
   },
   activeSuggestion: {
-    backgroundColor: '#effff0',
-    borderColor: '#65a473',
+    backgroundColor: colors.status.success.background,
+    borderColor: colors.status.success.border,
   },
   typeText: {
     fontSize: 12,
-    color: '#374151',
+    color: colors.text.inverse,
   },
   activeBugText: {
-    color: '#991b1b',
+    color: colors.status.error.text,
   },
   activeSuggestionText: {
-    color: '#25af1e',
+    color: colors.status.success.text,
   },
   input: {
     width: '100%',
     padding: 12,
     borderWidth: 1,
     borderRadius: 6,
-    borderColor: '#4b5563',
-    backgroundColor: '#374151',
-    color: '#f9fafb',
+    borderColor: colors.border.default,
+    backgroundColor: colors.background.secondary,
+    color: colors.text.primary,
     fontSize: 14,
     marginBottom: 16,
   },
@@ -100,32 +101,33 @@ export const ModalStyles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 6,
     paddingHorizontal: 12,
-    backgroundColor: '#374151',
-    borderColor: '#4b5563',
+    backgroundColor: colors.background.secondary,
+    borderColor: colors.border.default,
     borderWidth: 1,
     borderRadius: 6,
     flex: 1,
   },
   attachmentText: {
     fontSize: 12,
-    color: '#d1d5db',
+    color: colors.text.secondary,
     marginLeft: 5,
   },
   recording: {
-    backgroundColor: '#fef2f2',
-    borderColor: '#fecaca',
+    backgroundColor: colors.status.error.background,
+    borderColor: colors.status.error.border,
   },
   recordingText: {
-    color: '#991b1b',
+    color: colors.status.error.text,
   },
   recordingIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: 12,
+    justifyContent: 'center',
   },
   recordingLabel: {
     fontSize: 12,
-    color: '#dc2626',
+    color: colors.status.warning.text,
     marginLeft: 4,
   },
   actions: {
@@ -140,23 +142,23 @@ export const ModalStyles = StyleSheet.create({
     borderRadius: 6,
   },
   secondaryButton: {
-    backgroundColor: '#374151',
-    borderColor: '#4b5563',
+    backgroundColor: colors.background.secondary,
+    borderColor: colors.border.default,
     borderWidth: 1,
   },
   secondaryText: {
-    color: '#d1d5db',
+    color: colors.text.secondary,
     fontSize: 14,
   },
   primaryButton: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: colors.interactive.primary,
   },
   primaryButtonDisabled: {
-    backgroundColor: '#4b5563',
-    color: '#9ca3af',
+    backgroundColor: colors.interactive.primaryDisabled,
+    color: colors.text.muted,
   },
   primaryText: {
-    color: '#fff',
+    color: colors.text.white,
     fontSize: 14,
   },
   statusNudge: {
@@ -167,12 +169,12 @@ export const ModalStyles = StyleSheet.create({
   },
   errorLabel: {
     fontSize: 15,
-    color: '#EF4444',
+    color: colors.status.error.text,
     marginLeft: 4,
   },
   successLabel: {
     fontSize: 15,
-    color: '#10B981',
+    color: colors.status.success.text,
     marginLeft: 4,
   },
 });
