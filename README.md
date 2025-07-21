@@ -1,6 +1,56 @@
-# 📦 Feedback SDK: Integration Guide
+# 📦 React Native Feedback SDK
 
-This SDK supports sending user feedback to **Slack**, **Jira**, and **Microsoft Teams** along with optional screenshot or video attachments.
+[![npm version](https://badge.fury.io/js/react-native-feedbacks.svg)](https://badge.fury.io/js/react-native-feedbacks)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A comprehensive React Native SDK for collecting user feedback with seamless integration to **Slack**, **Jira**, and **Microsoft Teams**. Features include screenshot capture, screen recording, and customizable UI components.
+
+## ✨ Features
+
+- 🚀 **Multi-platform Integration**: Slack, Jira, Microsoft Teams
+- 📸 **Screenshot Capture**: Built-in screenshot functionality
+- 🎥 **Screen Recording**: Record user interactions
+- 🎨 **Customizable UI**: Floating button positioning
+- 📱 **React Native Optimized**: Designed specifically for React Native apps
+- 🔒 **Type Safe**: Complete TypeScript support
+- ♿ **Accessible**: WCAG AA compliant color system
+- 📚 **Well Documented**: Comprehensive setup guides
+
+## 📦 Installation
+
+```bash
+npm install react-native-feedbacks
+# or
+yarn add react-native-feedbacks
+```
+
+### Peer Dependencies
+
+Make sure you have the required peer dependencies installed:
+
+```bash
+npm install react-native-svg react-native-fs react-native-view-shot react-native-record-screen react-native-create-thumbnail
+```
+
+### Platform Setup
+
+For iOS, add the following permissions to your `Info.plist`:
+
+```xml
+<key>NSCameraUsageDescription</key>
+<string>This app needs access to camera to capture screenshots</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>This app needs access to microphone for screen recording</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app needs access to photo library to save screenshots</string>
+```
+
+For Android, add the following permissions to your `AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+```
 
 ---
 

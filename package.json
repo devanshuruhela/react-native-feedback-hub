@@ -1,16 +1,49 @@
 {
-  "name": "rnfeedback",
-  "version": "0.0.1",
-  "private": true,
+  "name": "react-native-feedbacks",
+  "version": "1.0.0",
+  "private": false,
+  "description": "React Native feedback SDK with Slack, Jira, and Microsoft Teams integration",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "react-native",
+    "feedback",
+    "slack",
+    "jira",
+    "teams",
+    "bug-reporting",
+    "user-feedback",
+    "screenshot",
+    "screen-recording"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/devanshuruhela/RNFeedback"
+  },
+  "homepage": "https://devanshu.dev",
+  "license": "MIT",
+  "author": "Devanshu Ruhela",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf lib/",
+    "prepublishOnly": "npm run clean && npm run build",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-native": ">=0.70.0"
   },
   "dependencies": {
-    "@react-native/new-app-screen": "^0.80.1",
     "axios": "^1.10.0",
     "lucide-react-native": "^0.525.0",
     "mime": "^4.0.7",

@@ -66,6 +66,10 @@ yarn-error.log
 # testing
 /coverage
 
+# Build output (don't commit compiled files)
+lib/
+*.tsbuildinfo
+
 # Yarn
 .yarn/*
 !.yarn/patches

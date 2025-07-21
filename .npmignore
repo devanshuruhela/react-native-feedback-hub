@@ -1,0 +1,37 @@
+# Development files
+src/
+tsconfig.json
+tsconfig.build.json
+.eslintrc.js
+.prettierrc.js
+babel.config.js
+metro.config.js
+jest.config.js
+
+# React Native app files
+App.tsx
+index.js
+app.json
+android/
+ios/
+__tests__/
+
+# Development dependencies
+node_modules/
+.git/
+.gitignore
+.watchmanconfig
+.bundle/
+.vscode/
+
+# Build artifacts
+*.log
+*.tgz
+.DS_Store
+Thumbs.db
+
+# Keep only the built library and documentation
+!lib/
+!README.md
+!LICENSE
+!package.json
