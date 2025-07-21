@@ -39,7 +39,7 @@ This SDK supports sending user feedback to **Slack**, **Jira**, and **Microsoft 
 ### 2️⃣ Jira Integration
 
 #### ✅ Required Inputs
-- Jira **Base URL** (e.g. `https://yourcompany.atlassian.net`)
+- Jira **Host** (e.g. `yourcompany.atlassian.net`)
 - Jira **Email** (associated with API token)
 - Jira **API Token**
 - Jira **Project Key** and optionally a **custom Issue Type**
@@ -59,7 +59,7 @@ This SDK supports sending user feedback to **Slack**, **Jira**, and **Microsoft 
 4. Provide:
    - Your Jira email
    - API token
-   - Base URL (`https://yourdomain.atlassian.net`)
+   - Host (`yourdomain.atlassian.net`)
    - Project key where feedback will be logged
 
 ---
@@ -102,7 +102,7 @@ sendToSlack(payload, {
 sendToJira(payload, {
   email: 'your@email.com',
   apiToken: 'abc123',
-  baseUrl: 'https://yourdomain.atlassian.net',
+  host: 'yourdomain.atlassian.net',
   projectKey: 'SDK'
 });
 
