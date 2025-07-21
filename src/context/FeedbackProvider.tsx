@@ -83,7 +83,12 @@ export const FeedbackProvider = ({
           />
         }
         {visible && <FeedbackModal onClose={toggleModal} />}
-        {isRecording && <View style={styles.RecordingView} />}
+        {isRecording  && (
+          <View
+            pointerEvents="none"
+            style={styles.RecordingView}
+          />
+        )}
       </View>
     </FeedbackContext.Provider>
   );

@@ -12,7 +12,7 @@ export function useScreenRecorder() {
   const [videoUri, setVideoUri] = useState<string | null>(null);
 
   const start = async (): Promise<string | null> => {
-    const res = await RecordScreen.startRecording({ mic: false });
+    const res = await RecordScreen.startRecording({ mic: false});
     console.log(res);
     if (res === RecordingResult.PermissionError) {
       return null;
@@ -24,6 +24,7 @@ export function useScreenRecorder() {
     const res = (await RecordScreen.stopRecording()) as StopRecordingResult;
     if (res && res.result?.outputURL) {
       setVideoUri(res.result.outputURL);
+      RecordScreen.clean();
       return res.result.outputURL;
     }
     return null;

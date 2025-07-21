@@ -85,6 +85,7 @@ export const ModalStyles = StyleSheet.create({
   },
   textarea: {
     minHeight: 80,
+    maxHeight: 240,
     textAlignVertical: 'top',
   },
   attachments: {
@@ -157,5 +158,21 @@ export const ModalStyles = StyleSheet.create({
   primaryText: {
     color: '#fff',
     fontSize: 14,
+  },
+  statusNudge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    justifyContent: 'center',
+  },
+  errorLabel: {
+    fontSize: 15,
+    color: '#EF4444',
+    marginLeft: 4,
+  },
+  successLabel: {
+    fontSize: 15,
+    color: '#10B981',
+    marginLeft: 4,
   },
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState, useTransition } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Modal,
   Pressable,
+  ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import {
   Bug,
@@ -15,6 +17,8 @@ import {
   Square,
   Circle,
   X,
+  CircleCheck,
+  CircleX,
 } from 'lucide-react-native';
 import { useFeedback } from '../context/FeedbackProvider';
 import captureScreen from '../utils/captureScreen';
@@ -27,7 +31,7 @@ import AttachmentPreview from './AttachmentPreview';
 import { useStoragePermission } from '../hooks/useStoragePermision';
 import { sendToTeams } from '../Integrations/teams';
 
-const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
+const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
   const [type, setType] = useState<FeedbackType>('bug');
   const {
     slackConfig,
@@ -45,9 +49,24 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
   const { start, stop, videoUri, setVideoUri } = useScreenRecorder();
   const { granted, requestPermission } = useStoragePermission();
   const disableSubmit = !title || !message;
+  const [visible, setVisible] = useState(true);
+  const [isPending, startTransition] = useTransition();
+  const [status, setStatus] = useState<'success' | 'failed' | undefined>(
+    undefined,
+  );
+  const  scrollViewRef = useRef<ScrollView>(null)
+
   useEffect(() => {
     requestPermission();
   }, [requestPermission]);
+
+
+  useEffect(() => {
+    if (status || screenshot || videoUri) {
+      scrollViewRef.current?.scrollToEnd();
+    }
+  }, [screenshot, status, videoUri])
+  
 
   const handleRecording = async () => {
     if (!isRecording) {
@@ -63,43 +82,59 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
   };
 
   const handleCapture = async () => {
+    setVisible(false);  
+    await new Promise(res => setTimeout(res, 200));
     const shot = await captureScreen();
     setScreenshot(shot);
+    setVisible(true);
   };
 
   const handleCancelAndClear = () => {
     setTitle('');
     setMessage('');
     setScreenshot('');
-    onClose();
   };
 
-  const handleSubmit = async () => {
-    const payload: FeedbackPayload = {
-      title,
-      message,
-      type,
-      screenshot,
-      video: videoUri,
-    };
-    if (slackConfig) await sendToSlack(payload, slackConfig);
-    if (jiraConfig) await sendToJira(payload, jiraConfig);
-    if (microsoftTeamsConfig) await sendToTeams(payload , microsoftTeamsConfig)
-    handleCancelAndClear();
+  const handleSubmit = () => {
+    setStatus(undefined)
+    startTransition(async () => {
+      const payload: FeedbackPayload = {
+        title,
+        message,
+        type,
+        screenshot,
+        video: videoUri,
+      };
+
+      try {
+        if (slackConfig) await sendToSlack(payload, slackConfig);
+        if (jiraConfig) await sendToJira(payload, jiraConfig);
+        if (microsoftTeamsConfig)
+          await sendToTeams(payload, microsoftTeamsConfig);
+        handleCancelAndClear();
+        setStatus('success');
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      } catch (error) {
+        setStatus('failed');
+        console.error('Feedback submission failed:', error);
+      }
+    });
   };
 
-  if (!granted) {
+  if (!granted || !visible) {
     return null;
   }
 
-  return (
+  return (  
     <Modal
       animationType="fade"
       transparent
       statusBarTranslucent
       navigationBarTranslucent
     >
-      <View style={styles.overlay}>
+      <Pressable style={styles.overlay} onPress={onClose}>
         <View style={styles.modal}>
           <View style={styles.header}>
             <Text style={styles.title}>Send Feedback</Text>
@@ -107,140 +142,182 @@ const FeedbackPopover = ({ onClose }: { onClose: () => void }) => {
               <X color="#9ca3af" />
             </Pressable>
           </View>
-
-          <View style={styles.form}>
-            <Text style={styles.label}>Type</Text>
-            <View style={styles.typeButtons}>
-              <TouchableOpacity
-                style={[styles.typeButton, type === 'bug' && styles.activeBug]}
-                onPress={() => setType('bug')}
-              >
-                <Bug size={16} color={type === 'bug' ? '#991b1b' : '#374151'} />
-                <Text
+          <ScrollView ref={scrollViewRef}>
+            <Pressable style={styles.form}>
+              <Text style={styles.label}>Type</Text>
+              <View style={styles.typeButtons}>
+                <TouchableOpacity
                   style={[
-                    styles.typeText,
-                    type === 'bug' && styles.activeBugText,
+                    styles.typeButton,
+                    type === 'bug' && styles.activeBug,
                   ]}
+                  onPress={() => setType('bug')}
                 >
-                  {' '}
-                  Bug Report
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.typeButton,
-                  type === 'suggestion' && styles.activeSuggestion,
-                ]}
-                onPress={() => setType('suggestion')}
-              >
-                <Lightbulb
-                  size={16}
-                  color={type === 'suggestion' ? '#25af1e' : '#374151'}
-                />
-                <Text
+                  <Bug
+                    size={16}
+                    color={type === 'bug' ? '#991b1b' : '#374151'}
+                  />
+                  <Text
+                    style={[
+                      styles.typeText,
+                      type === 'bug' && styles.activeBugText,
+                    ]}
+                  >
+                    {' '}
+                    Bug Report
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                   style={[
-                    styles.typeText,
-                    type === 'suggestion' && styles.activeSuggestionText,
+                    styles.typeButton,
+                    type === 'suggestion' && styles.activeSuggestion,
                   ]}
+                  onPress={() => setType('suggestion')}
                 >
-                  {' '}
-                  Suggestion
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.label}>Title</Text>
-            <TextInput
-              value={title}
-              onChangeText={setTitle}
-              style={styles.input}
-              placeholder="Brief description of the issue or suggestion"
-              placeholderTextColor="#9ca3af"
-            />
-
-            <Text style={styles.label}>Details</Text>
-            <TextInput
-              value={message}
-              onChangeText={setMessage}
-              style={[styles.input, styles.textarea]}
-              placeholder="Please provide more details about your feedback..."
-              placeholderTextColor="#9ca3af"
-              multiline
-            />
-
-            <Text style={styles.label}>Attachments</Text>
-            <View style={styles.attachments}>
-              <TouchableOpacity
-                style={styles.attachmentButton}
-                onPress={handleCapture}
-              >
-                <Camera size={16} color="#9ca3af" />
-                <Text style={styles.attachmentText}> Screenshot</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.attachmentButton,
-                  isRecording && styles.recording,
-                ]}
-                onPress={handleRecording}
-              >
-                {isRecording ? (
-                  <Square size={16} color="#991b1b" />
-                ) : (
-                  <Video size={16} color="#9ca3af" />
-                )}
-                <Text
-                  style={[
-                    styles.attachmentText,
-                    isRecording && styles.recordingText,
-                  ]}
-                >
-                  {isRecording ? ' Stop Recording' : ' Record Screen'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            {isRecording && (
-              <View style={styles.recordingIndicator}>
-                <Circle size={12} color="#dc2626" fill="#dc2626" />
-                <Text style={styles.recordingLabel}>
-                  {' '}
-                  Recording in progress...
-                </Text>
+                  <Lightbulb
+                    size={16}
+                    color={type === 'suggestion' ? '#25af1e' : '#374151'}
+                  />
+                  <Text
+                    style={[
+                      styles.typeText,
+                      type === 'suggestion' && styles.activeSuggestionText,
+                    ]}
+                  >
+                    {' '}
+                    Suggestion
+                  </Text>
+                </TouchableOpacity>
               </View>
-            )}
 
-            <AttachmentPreview
-              screenshotUri={screenshot}
-              recordingUri={videoUri}
-              onRemoveScreenshot={() => setScreenshot(null)}
-              onRemoveRecording={() => setVideoUri(null)}
-            />
-            <View style={styles.actions}>
-              <TouchableOpacity
-                onPress={handleCancelAndClear}
-                style={[styles.button, styles.secondaryButton]}
-              >
-                <Text style={styles.secondaryText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleSubmit}
-                style={[
-                  styles.button,
-                  disableSubmit
-                    ? styles.primaryButtonDisabled
-                    : styles.primaryButton,
-                ]}
-                disabled={disableSubmit}
-              >
-                <Text style={styles.primaryText}>Send Feedback</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+              <Text style={styles.label}>Title</Text>
+              <TextInput
+                value={title}
+                onChangeText={setTitle}
+                style={styles.input}
+                placeholder="Brief description of the issue or suggestion"
+                placeholderTextColor="#9ca3af"
+                enterKeyHint="done"
+                submitBehavior="blurAndSubmit"
+              />
+
+              <Text style={styles.label}>Details</Text>
+              <TextInput
+                value={message}
+                onChangeText={setMessage}
+                style={[styles.input, styles.textarea]}
+                placeholder="Please provide more details about your feedback..."
+                placeholderTextColor="#9ca3af"
+                multiline
+                scrollEnabled
+                enterKeyHint="done"
+                submitBehavior="blurAndSubmit"
+              />
+
+              <Text style={styles.label}>Attachments</Text>
+              <View style={styles.attachments}>
+                <TouchableOpacity
+                  style={styles.attachmentButton}
+                  onPress={handleCapture}
+                >
+                  <Camera size={16} color="#9ca3af" />
+                  <Text style={styles.attachmentText}> Screenshot</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.attachmentButton,
+                    isRecording && styles.recording,
+                  ]}
+                  onPress={handleRecording}
+                >
+                  {isRecording ? (
+                    <Square size={16} color="#991b1b" />
+                  ) : (
+                    <Video size={16} color="#9ca3af" />
+                  )}
+                  <Text
+                    style={[
+                      styles.attachmentText,
+                      isRecording && styles.recordingText,
+                    ]}
+                  >
+                    {isRecording ? ' Stop Recording' : ' Record Screen'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              {isRecording && (
+                <View style={styles.recordingIndicator}>
+                  <Circle size={12} color="#dc2626" fill="#dc2626" />
+                  <Text style={styles.recordingLabel}>
+                    {' '}
+                    Recording in progress...
+                  </Text>
+                </View>
+              )}
+
+              <AttachmentPreview
+                screenshotUri={screenshot}
+                recordingUri={videoUri}
+                onRemoveScreenshot={() => setScreenshot(null)}
+                onRemoveRecording={() => setVideoUri(null)}
+              />
+              <View style={styles.actions}>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleCancelAndClear();
+                    onClose();
+                  }}
+                  style={[styles.button, styles.secondaryButton]}
+                >
+                  <Text style={styles.secondaryText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  style={[
+                    styles.button,
+                    disableSubmit
+                      ? styles.primaryButtonDisabled
+                      : styles.primaryButton,
+                  ]}
+                  disabled={disableSubmit || isPending}
+                >
+                  {isPending ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.primaryText}>Send Feedback</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+              {status && (
+                <View style={styles.statusNudge}>
+                  {status === 'success' ? (
+                    <CircleCheck size={15} color="#10B981" />
+                  ) : (
+                    <CircleX size={15} color={'#EF4444'} />
+                  )}
+                  <Text
+                    style={
+                      status === 'success'
+                        ? styles.successLabel
+                        : styles.errorLabel
+                    }
+                  >
+                    {' '}
+                    {status === 'success'
+                      ? 'Feedback submitted successfully!'
+                      : 'Failed to submit feedback, try again!'}
+                  </Text>
+                </View>
+              )}
+            </Pressable>
+          </ScrollView>
         </View>
-      </View>
-    </Modal>
+   
+      </Pressable>  
+    </Modal>    
+  
   );
 };
 
-export default React.memo(FeedbackPopover);
+export default React.memo(FeedbackModal);

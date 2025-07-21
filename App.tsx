@@ -4,14 +4,14 @@
  *
  * @format
  */
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import { StatusBar, useColorScheme } from 'react-native';
 import { FeedbackProvider } from './src';
+import { NewAppScreen } from '@react-native/new-app-screen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-      <View style={styles.container}>
         <FeedbackProvider
           slackConfig={{botToken: 'asdsa' , channelId: 'gsfds'}}
           // jiraConfig={{
@@ -22,15 +22,9 @@ function App() {
           // }}
         >
           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+          <NewAppScreen />
         </FeedbackProvider>
-      </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
