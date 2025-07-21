@@ -94,23 +94,29 @@ This SDK supports sending user feedback to **Slack**, **Jira**, and **Microsoft 
 ## 🚀 Example Usage
 
 ```ts
-sendToSlack(payload, {
+const slackConfig = {
   botToken: 'xoxb-...',
   channelId: 'C123456'
-});
+}
 
-sendToJira(payload, {
+const jiraConfig = {
   email: 'your@email.com',
   apiToken: 'abc123',
   host: 'yourdomain.atlassian.net',
   projectKey: 'SDK'
-});
+}
 
-sendToTeams(payload, {
+const microsftTeamsConfig = {
   accessToken: 'Bearer eyJ0eXAiOiJK...',
   teamId: 'e4d4c9a6-...',
   channelId: '19:abc123@thread.tacv2'
-});
+}
+
+// you can add single or multiple supported configs
+// Default value for feedbackButtonPosition is bottom: 30 and right: 30
+<FeedbackProvider slackConfig={slackConfig} feedbackButtonPosition={{bottom:30, right: 30}}>
+    <App>
+</FeedbackProvider>
 ```
 
 ---
