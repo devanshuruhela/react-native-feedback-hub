@@ -1,9 +1,9 @@
-# 📦 React Native Feedback SDK
+# 📦 React Native Feedbacks
 
 [![npm version](https://badge.fury.io/js/react-native-feedbacks.svg)](https://badge.fury.io/js/react-native-feedbacks)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A comprehensive React Native SDK for collecting user feedback with seamless integration to **Slack**, **Jira**, and **Microsoft Teams**. Features include screenshot capture, screen recording, and customizable UI components.
+A comprehensive React Native SDK for collecting user feedback with seamless integration to **Slack**, **Jira**, and **Microsoft Teams**. Features include screenshot capture, screen recording, and customizable UI.
 
 ## ✨ Features
 
@@ -30,6 +30,8 @@ Make sure you have the required peer dependencies installed:
 
 ```bash
 npm install react-native-svg react-native-fs react-native-view-shot react-native-record-screen react-native-create-thumbnail
+# or 
+yarn add react-native-svg react-native-fs react-native-view-shot react-native-record-screen react-native-create-thumbnail
 ```
 
 ### Platform Setup
@@ -164,9 +166,11 @@ const microsftTeamsConfig = {
 
 // you can add single or multiple supported configs
 // Default value for feedbackButtonPosition is bottom: 30 and right: 30
+
 <FeedbackProvider slackConfig={slackConfig} feedbackButtonPosition={{bottom:30, right: 30}}>
     <App/>
 </FeedbackProvider>
+
 ```
 
 ---

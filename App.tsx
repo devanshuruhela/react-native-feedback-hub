@@ -6,7 +6,6 @@
  */
 import { StatusBar, useColorScheme } from 'react-native';
 import { FeedbackProvider } from './src';
-import { NewAppScreen } from '@react-native/new-app-screen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -22,7 +21,7 @@ function App() {
           // }}
         >
           <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-          <NewAppScreen />
+         
         </FeedbackProvider>
   );
 }
