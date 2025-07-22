@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useTransition } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -51,8 +51,8 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
   const { start, stop, videoUri, setVideoUri } = useScreenRecorder();
   const { granted, requestPermission } = useStoragePermission();
   const disableSubmit = !title || !message;
-  const [visible, setVisible] = useState(true);
-  const [isPending, startTransition] = useTransition();
+  const [visible, setVisible] = useState<boolean>(true);
+  const [isPending, setIsPending] = useState<boolean>(false);
   const [status, setStatus] = useState<'success' | 'failed' | undefined>(
     undefined,
   );
@@ -98,9 +98,10 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
     setVideoUri('');
   };
 
-  const handleSubmit = () => {
-    setStatus(undefined)
-    startTransition(async () => {
+  const handleSubmit = async () => {
+    setStatus(undefined);
+    setIsPending(true);
+    try {
       const payload: FeedbackPayload = {
         title,
         message,
@@ -109,21 +110,21 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
         video: videoUri,
       };
 
-      try {
-        if (slackConfig) await sendToSlack(payload, slackConfig);
-        if (jiraConfig) await sendToJira(payload, jiraConfig);
-        if (microsoftTeamsConfig)
-          await sendToTeams(payload, microsoftTeamsConfig);
-        handleCancelAndClear();
-        setStatus('success');
-        setTimeout(() => {
-          onClose();
-        }, 2000);
-      } catch (error) {
-        setStatus('failed');
-        console.error('Feedback submission failed:', error);
-      }
-    });
+      if (slackConfig) await sendToSlack(payload, slackConfig);
+      if (jiraConfig) await sendToJira(payload, jiraConfig);
+      if (microsoftTeamsConfig)
+        await sendToTeams(payload, microsoftTeamsConfig);
+      handleCancelAndClear();
+      setIsPending(false);
+      setStatus('success');
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    } catch (error) {
+      setStatus('failed');
+      setIsPending(false);
+      console.error('Feedback submission failed:', error);
+    }
   };
 
   if (!granted || !visible) {
