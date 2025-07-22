@@ -4,5 +4,5 @@ export type {
   JiraConfig,
   SlackConfig,
   MicrosoftTeamsConfig,
-  feedbackButtonPositionType as FeedbackButtonPosition
+  FeedbackButtonPositionType as FeedbackButtonPosition
 } from './types/types';

@@ -1,12 +1,12 @@
 import { Bug, Circle } from 'lucide-react-native';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
-import { feedbackButtonPositionType } from '../types/types';
+import { FeedbackButtonPositionType } from '../types/types';
 import { colors } from '../tokens/colors';
 
 interface FloatingButtonProps {
   onPress: () => void;
-  buttonPosition?: feedbackButtonPositionType;
+  buttonPosition?: FeedbackButtonPositionType;
   isRecording?: boolean;
 }
 

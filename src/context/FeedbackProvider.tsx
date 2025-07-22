@@ -4,7 +4,7 @@ import FloatingButton from '../components/FloatingButton';
 import FeedbackModal from '../components/FeedbackModal';
 import { colors } from '../tokens/colors';
 import {
-  feedbackButtonPositionType,
+  FeedbackButtonPositionType,
   FeedbackContextType,
   JiraConfig,
   MicrosoftTeamsConfig,
@@ -30,10 +30,11 @@ export const useFeedback = () => useContext(FeedbackContext);
 
 interface FeedbackProviderProps {
   children: React.ReactNode;
-  feedbackButtonPosition?: feedbackButtonPositionType;
+  feedbackButtonPosition?: FeedbackButtonPositionType;
   jiraConfig?: JiraConfig;
   slackConfig?: SlackConfig;
-  microsoftTeamsConfig?: MicrosoftTeamsConfig
+  microsoftTeamsConfig?: MicrosoftTeamsConfig;
+  enabled?: boolean;
 }
 
 export const FeedbackProvider = ({
@@ -45,6 +46,7 @@ export const FeedbackProvider = ({
   slackConfig,
   jiraConfig,
   microsoftTeamsConfig,
+  enabled = false,
 }: FeedbackProviderProps) => {
   const [visible, setVisible] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -75,21 +77,22 @@ export const FeedbackProvider = ({
       }}
     >
       <View style={styles.flex}>
-        {children}
-        {
-          <FloatingButton
-            buttonPosition={feedbackButtonPosition}
-            onPress={toggleModal}
-            isRecording={isRecording}
-          />
-        }
-        {visible && <FeedbackModal onClose={toggleModal} />}
-        {isRecording  && (
-          <View
-            pointerEvents="none"
-            style={styles.RecordingView}
-          />
-        )}
+        {enabled ? (
+          <>
+            {children}
+            {
+              <FloatingButton
+                buttonPosition={feedbackButtonPosition}
+                onPress={toggleModal}
+                isRecording={isRecording}
+              />
+            }
+            {visible && <FeedbackModal onClose={toggleModal} />}
+            {isRecording && (
+              <View pointerEvents="none" style={styles.RecordingView} />
+            )}
+          </>
+        ) : null}
       </View>
     </FeedbackContext.Provider>
   );
@@ -103,7 +106,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderWidth: 2,
     borderColor: colors.legacy.red,
-    borderRadius: 40,
+    borderRadius: 30,
     height: '100%',
     width: '100%',
   },

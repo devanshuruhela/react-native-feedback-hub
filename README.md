@@ -167,7 +167,11 @@ const microsftTeamsConfig = {
 // you can add single or multiple supported configs
 // Default value for feedbackButtonPosition is bottom: 30 and right: 30
 
-<FeedbackProvider slackConfig={slackConfig} feedbackButtonPosition={{bottom:30, right: 30}}>
+<FeedbackProvider 
+  slackConfig={slackConfig} 
+  feedbackButtonPosition={{bottom:30, right: 30}} 
+  enabled={condition...} // pass true to enable for All users
+>
     <App/>
 </FeedbackProvider>
 

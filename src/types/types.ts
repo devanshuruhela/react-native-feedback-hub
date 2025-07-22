@@ -41,7 +41,7 @@ export interface FeedbackContextType {
   setScreenshot: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export interface feedbackButtonPositionType {
+export interface FeedbackButtonPositionType {
   top?: number;
   right?: number;
   bottom?: number;
