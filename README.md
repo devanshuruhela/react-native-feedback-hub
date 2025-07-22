@@ -41,8 +41,6 @@ For iOS, add the following permissions to your `Info.plist`:
 ```xml
 <key>NSCameraUsageDescription</key>
 <string>This app needs access to camera to capture screenshots</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>This app needs access to microphone for screen recording</string>
 <key>NSPhotoLibraryUsageDescription</key>
 <string>This app needs access to photo library to save screenshots</string>
 ```
@@ -51,7 +49,7 @@ For Android, add the following permissions to your `AndroidManifest.xml`:
 
 ```xml
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 ```
 
 ---
