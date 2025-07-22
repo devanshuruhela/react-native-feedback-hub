@@ -61,6 +61,8 @@ For Android, add the following permissions to your `AndroidManifest.xml`:
 - [x] Slack
 - [x] Jira (Atlassian Cloud)
 - [x] Microsoft Teams (Graph API)
+- [ ] Zendesk
+- [ ] Trello
 
 ---
 
