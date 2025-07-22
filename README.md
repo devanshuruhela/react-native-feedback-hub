@@ -148,27 +148,33 @@ For Android, add the following permissions to your `AndroidManifest.xml`:
 ```ts
 const slackConfig = {
   botToken: 'xoxb-...',
-  channelId: 'C123456'
-}
+  channelId: 'C123456',
+};
 
 const jiraConfig = {
   email: 'your@email.com',
   apiToken: 'abc123',
   host: 'yourdomain.atlassian.net',
-  projectKey: 'SDK'
-}
+  projectKey: 'SDK',
+};
 
-const microsftTeamsConfig = {
+const microsoftTeamsConfig = {
   accessToken: 'Bearer eyJ0eXAiOiJK...',
   teamId: 'e4d4c9a6-...',
-  channelId: '19:abc123@thread.tacv2'
-}
+  channelId: '19:abc123@thread.tacv2',
+};
+
+const config = {
+  slackConfig,
+  jiraConfig,
+  microsoftTeamsConfig,
+};
 
 // you can add single or multiple supported configs
 // Default value for feedbackButtonPosition is bottom: 30 and right: 30
 
 <FeedbackProvider 
-  slackConfig={slackConfig} 
+  config={config}
   feedbackButtonPosition={{bottom:30, right: 30}} 
   enabled={condition...} // pass true to enable for All users
 >

@@ -34,9 +34,11 @@ export const useFeedback = () => useContext(FeedbackContext);
 interface FeedbackProviderProps {
   children: React.ReactNode;
   feedbackButtonPosition?: FeedbackButtonPositionType;
-  jiraConfig?: JiraConfig;
-  slackConfig?: SlackConfig;
-  microsoftTeamsConfig?: MicrosoftTeamsConfig;
+  config?: {
+    jiraConfig?: JiraConfig;
+    slackConfig?: SlackConfig;
+    microsoftTeamsConfig?: MicrosoftTeamsConfig;
+  };
   enabled?: boolean;
 }
 
@@ -46,9 +48,7 @@ export const FeedbackProvider = ({
     right: 30,
   },
   children,
-  slackConfig,
-  jiraConfig,
-  microsoftTeamsConfig,
+  config,
   enabled = false,
 }: FeedbackProviderProps) => {
   const [visible, setVisible] = useState(false);
@@ -67,9 +67,6 @@ export const FeedbackProvider = ({
     <FeedbackContext.Provider
       value={{
         toggleModal,
-        slackConfig,
-        jiraConfig,
-        microsoftTeamsConfig,
         isRecording,
         toggleRecording,
         title,
@@ -80,6 +77,7 @@ export const FeedbackProvider = ({
         setScreenshot,
         type,
         setType,
+        ...config,
       }}
     >
       <View style={styles.flex}>
