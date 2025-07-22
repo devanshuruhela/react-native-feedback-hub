@@ -54,7 +54,7 @@ For Android, add the following permissions to your `AndroidManifest.xml`:
 
 ---
 
-## 🧵 Supported Integrations
+## 🧵 Supported Platforms
 
 - [x] Slack
 - [x] Jira (Atlassian Cloud)
@@ -138,9 +138,7 @@ For Android, add the following permissions to your `AndroidManifest.xml`:
   2. Enable Microsoft Graph API
   3. Add the scopes above (delegated or application)
   4. Get OAuth access token for your user/app
-
-> ⚠️ Microsoft Graph is the most complex setup. We recommend using a user-delegated token to keep integration lightweight.
-
+  
 ---
 
 ## 🚀 Example Usage
