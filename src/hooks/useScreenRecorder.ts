@@ -22,9 +22,9 @@ export function useScreenRecorder() {
   const stop = async (): Promise<string | null> => {
     const res = (await RecordScreen.stopRecording()) as StopRecordingResult;
     if (res && res.result?.outputURL) {
-      setVideoUri(res.result.outputURL);
+      setVideoUri(`file://${res.result.outputURL}`);
       RecordScreen.clean();
-      return res.result.outputURL;
+      return res.result.outputURL
     }
     return null;
   };

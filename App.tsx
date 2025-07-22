@@ -7,28 +7,25 @@
 import { StatusBar, useColorScheme } from 'react-native';
 import { FeedbackProvider } from './src';
 
-// const config: SlackConfig = {
-//   botToken: '',
-//   channelId: '',
-// };
-
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-        <FeedbackProvider
-          // slackConfig={config}
-          // jiraConfig={{
-          //   host: 'your-domain.atlassian.net',
-          //   email: 'your-email@example.com',
-          //   apiToken: 'your-jira-api-token',
-          //   projectKey: 'YOURPROJ',
-          // }}
-          enabled
-        >
-          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-         
-        </FeedbackProvider>
+    <FeedbackProvider
+      // slackConfig={{
+      //   botToken: '',
+      //   channelId: '',
+      // }}
+      // jiraConfig={{
+      //   host: 'your-domain.atlassian.net',
+      //   email: 'your-email@example.com',
+      //   apiToken: 'your-jira-api-token',
+      //   projectKey: 'YOURPROJ',
+      // }}
+      enabled
+    >
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+    </FeedbackProvider>
   );
 }
 

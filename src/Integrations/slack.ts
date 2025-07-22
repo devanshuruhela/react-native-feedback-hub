@@ -3,6 +3,7 @@ import RNFS from 'react-native-fs';
 import mime from 'mime';
 import { FeedbackPayload, SlackConfig } from '../types/types';
 import { SLACK_API_ENDPOINTS } from '../utils/endpoints';
+import { convertToBytes } from '../utils/convertToBuytes';
 
 export const sendToSlack = async (
   payload: FeedbackPayload,
@@ -29,17 +30,14 @@ export const sendToSlack = async (
           Authorization: `Bearer ${botToken}`,
           'Content-Type': 'application/json; charset=utf-8',
         },
-      }
+      },
     );
 
     if (!res.data.ok) throw new Error(res.data.error);
     return res.data.ts;
   };
 
-  const uploadFileExternal = async (
-    uri: string,
-    threadTs: string,
-  ) => {
+  const uploadFileExternal = async (uri: string, threadTs: string) => {
     const fileName = uri.split('/').pop() || 'attachment';
     const fileType = mime.getType(uri) || 'application/octet-stream';
     const fileStat = await RNFS.stat(uri);
@@ -57,34 +55,21 @@ export const sendToSlack = async (
           Authorization: `Bearer ${botToken}`,
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-      }
+      },
     );
-    
 
     if (!uploadURLRes.data.ok) throw new Error(uploadURLRes.data.error);
     const { upload_url, file_id } = uploadURLRes.data;
-
-    // Step 2: Upload file content to upload_url
     const fileData = await RNFS.readFile(uri, 'base64');
+    const bytes = convertToBytes(fileData);
     
-    // Convert base64 to binary data for React Native
-    const binaryString = atob(fileData);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-
-    await axios.post(
-      upload_url,
-      bytes,
-      {
-        headers: {
-          'Content-Type': fileType,
-          'Content-Length': fileLength,
-        },
-      }
-    );
-    
+    // Step 2: Upload file content to upload_url
+    await axios.post(upload_url, bytes, {
+      headers: {
+        'Content-Type': fileType,
+        'Content-Length': fileLength,
+      },
+    });
 
     // Step 3: Attach the file to the Slack thread
     const completeRes = await axios.post(
@@ -104,16 +89,15 @@ export const sendToSlack = async (
           Authorization: `Bearer ${botToken}`,
           'Content-Type': 'application/json',
         },
-      }
+      },
     );
-    
 
     if (!completeRes.data.ok) throw new Error(completeRes.data.error);
   };
 
   try {
     const threadTs = await postMainMessage();
-    console.log(threadTs)
+    console.log(threadTs);
     if (screenshotUri) await uploadFileExternal(screenshotUri, threadTs);
     if (videoUri) await uploadFileExternal(videoUri, threadTs);
     console.log('[Slack] Report sent successfully');

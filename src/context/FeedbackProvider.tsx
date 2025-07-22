@@ -6,6 +6,7 @@ import { colors } from '../tokens/colors';
 import {
   FeedbackButtonPositionType,
   FeedbackContextType,
+  FeedbackType,
   JiraConfig,
   MicrosoftTeamsConfig,
   SlackConfig,
@@ -21,9 +22,11 @@ const FeedbackContext = createContext<FeedbackContextType>({
   setTitle: () => {},
   setMessage: () => {},
   setScreenshot: () => {},
+  setType: () => {},
   slackConfig: undefined,
   jiraConfig: undefined,
   microsoftTeamsConfig: undefined,
+  type: 'bug',
 });
 
 export const useFeedback = () => useContext(FeedbackContext);
@@ -53,6 +56,7 @@ export const FeedbackProvider = ({
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [screenshot, setScreenshot] = useState<string | null>(null);
+  const [type, setType] = useState<FeedbackType>('bug');
 
   const toggleModal = useCallback(() => setVisible(!visible), [visible]);
   const toggleRecording = useCallback(
@@ -74,6 +78,8 @@ export const FeedbackProvider = ({
         setTitle,
         setMessage,
         setScreenshot,
+        type,
+        setType,
       }}
     >
       <View style={styles.flex}>

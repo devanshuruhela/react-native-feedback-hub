@@ -25,7 +25,7 @@ import captureScreen from '../utils/captureScreen';
 import { sendToSlack } from '../Integrations/slack';
 import { sendToJira } from '../Integrations/jira';
 import { useScreenRecorder } from '../hooks/useScreenRecorder';
-import { FeedbackPayload, FeedbackType } from '../types/types';
+import { FeedbackPayload } from '../types/types';
 import { ModalStyles as styles } from '../Styles/ModalStyle';
 import AttachmentPreview from './AttachmentPreview';
 import { useStoragePermission } from '../hooks/useStoragePermision';
@@ -33,7 +33,6 @@ import { sendToTeams } from '../Integrations/teams';
 import { colors } from '../tokens/colors';
 
 const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
-  const [type, setType] = useState<FeedbackType>('bug');
   const {
     slackConfig,
     jiraConfig,
@@ -41,11 +40,13 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
     toggleRecording,
     isRecording,
     title,
+    type,
     message,
     screenshot,
     setMessage,
     setScreenshot,
     setTitle,
+    setType
   } = useFeedback();
   const { start, stop, videoUri, setVideoUri } = useScreenRecorder();
   const { granted, requestPermission } = useStoragePermission();
@@ -94,6 +95,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
     setTitle('');
     setMessage('');
     setScreenshot('');
+    setVideoUri('');
   };
 
   const handleSubmit = () => {

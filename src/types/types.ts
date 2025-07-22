@@ -36,9 +36,11 @@ export interface FeedbackContextType {
   title: string;
   message: string;
   screenshot: string | null;
+  type: FeedbackType;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
   setScreenshot: React.Dispatch<React.SetStateAction<string | null>>;
+  setType: React.Dispatch<React.SetStateAction<FeedbackType>>
 }
 
 export interface FeedbackButtonPositionType {
