@@ -84,8 +84,8 @@ For Android, add the following permissions to your `AndroidManifest.xml`:
 2. Create a new app or use existing one
 3. Under **OAuth & Permissions**, add the required scopes
 4. Install the app to your workspace and copy the **Bot Token**
-5. Grab your target channel ID from Slack (`Right-click > Copy Channel ID`)
-
+5. Grab your target channel ID from Slack (`Channel Info > Copy Channel ID`)
+6. Add App to the channel.
 ---
 
 ### 2️⃣ Jira Integration

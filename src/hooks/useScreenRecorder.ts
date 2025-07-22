@@ -12,8 +12,7 @@ export function useScreenRecorder() {
   const [videoUri, setVideoUri] = useState<string | null>(null);
 
   const start = async (): Promise<string | null> => {
-    const res = await RecordScreen.startRecording({ mic: false});
-    console.log(res);
+    const res = await RecordScreen.startRecording({ mic: false ,fps: 24 , bitrate: 1024000});
     if (res === RecordingResult.PermissionError) {
       return null;
     }
