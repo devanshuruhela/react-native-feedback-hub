@@ -7,7 +7,6 @@
 import { StatusBar, useColorScheme } from 'react-native';
 import { FeedbackProvider } from './src';
 
-
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 

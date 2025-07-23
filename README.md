@@ -123,21 +123,8 @@ For Android, add the following permissions to your `AndroidManifest.xml`:
 - **Team ID**
 - **Channel ID**
 
-#### 🔑 Required Graph API Scopes
-
-| Scope                    | Description                                         |
-|--------------------------|-----------------------------------------------------|
-| `ChannelMessage.Send`    | Send feedback messages to Teams channels            |
-| `Files.ReadWrite.All`    | Upload screenshots/videos to Teams file storage     |
-| `Group.ReadWrite.All`    | Access Teams/channel info and manage messages/files |
-| `Sites.ReadWrite.All`*   | Required for file uploads to SharePoint             |
-
-#### 📌 Setup Options
-- Use [Azure Portal](https://portal.azure.com) to:
-  1. Register a new app
-  2. Enable Microsoft Graph API
-  3. Add the scopes above (delegated or application)
-  4. Get OAuth access token for your user/app
+#### 📌 Setup
+For detailed setup instructions, see [Microsoft Teams Integration Guide](./microsoft_teams_integration_readme.md).
 
 > ⚠️ Microsoft Graph is the most complex setup. We recommend using a user-delegated token to keep integration lightweight.
 
