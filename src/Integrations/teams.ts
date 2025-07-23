@@ -2,56 +2,120 @@ import axios from 'axios';
 import mime from 'mime';
 import { FeedbackPayload, MicrosoftTeamsConfig } from '../types/types';
 import { readFile } from 'react-native-fs';
+import { convertToBytes } from '../utils/convertToBuytes';
+import { TEAMS_API_ENDPOINTS } from '../utils/endpoints';
 
 export const sendToTeams = async (
   payload: FeedbackPayload,
   config: MicrosoftTeamsConfig,
 ) => {
   const { title, message, type, screenshot, video } = payload;
-
   const { accessToken, teamId, channelId } = config;
   const fileUris = [screenshot, video].filter(Boolean) as string[];
 
-  const uploadedFileNames: string[] = [];
+  const uploadedFiles: { name: string; webUrl: string }[] = [];
 
   try {
-    // 1. Upload files
+    // 1. Get filesFolder and driveId
+    let filesFolderId;
+    let driveId;
+
+    try {
+      const channelRes = await axios.get(
+        TEAMS_API_ENDPOINTS.getFilesFolder(teamId, channelId),
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      filesFolderId = channelRes?.data?.id;
+      driveId = channelRes?.data?.parentReference?.driveId;
+
+      if (!filesFolderId || !driveId) {
+        throw new Error(
+          'filesFolder or driveId not found — ensure channel file storage is initialized.',
+        );
+      }
+    } catch (metaErr: any) {
+      console.warn(
+        '[Teams] Could not fetch channel metadata:',
+        metaErr.response?.data || metaErr.message,
+      );
+      throw metaErr;
+    }
+
+    // 2. Upload each file
     for (const uri of fileUris) {
       const fileName = uri.split('/').pop() || 'feedback_file';
       const mimeType = mime.getType(uri) || 'application/octet-stream';
 
-      const sessionRes = await axios.post(
-        `https://graph.microsoft.com/v1.0/teams/${teamId}/channels/${channelId}/filesFolder:/FeedbackSDK/${fileName}:/createUploadSession`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
+      try {
+        const sessionRes = await axios.post(
+          TEAMS_API_ENDPOINTS.createUploadSession(driveId, filesFolderId, fileName),
+          {
+            item: {
+              '@microsoft.graph.conflictBehavior': 'rename',
+              name: fileName,
+            },
           },
-        },
-      );
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
-      const uploadUrl = sessionRes.data.uploadUrl;
-      const fileBase64 = await readFile(uri, 'base64');
-      const fileBuffer = Buffer.from(fileBase64, 'base64');
+        const uploadUrl = sessionRes.data.uploadUrl;
 
-      await axios.put(uploadUrl, fileBuffer, {
-        headers: {
-          'Content-Length': fileBuffer.length,
-          'Content-Type': mimeType,
-        },
-      });
+        const fileBase64 = await readFile(uri, 'base64');
+        const fileBuffer = convertToBytes(fileBase64);
 
-      uploadedFileNames.push(fileName);
+        await axios.put(uploadUrl, fileBuffer, {
+          headers: {
+            'Content-Length': fileBuffer.length,
+            'Content-Range': `bytes 0-${fileBuffer.length - 1}/${fileBuffer.length}`,
+            'Content-Type': mimeType,
+          },
+        });
+
+        const fileMeta = await axios.get(
+          TEAMS_API_ENDPOINTS.getFileMeta(driveId, filesFolderId, fileName),
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        uploadedFiles.push({
+          name: fileMeta.data.name,
+          webUrl: fileMeta.data.webUrl,
+        });
+
+        console.log('[Teams] Uploaded:', fileName);
+      } catch (uploadError: any) {
+        console.error('[Teams] Upload failed for:', fileName);
+        console.error(uploadError.response?.data || uploadError.message);
+      }
     }
 
-    // 2. Send main message
-    const mainContent = `**[${type.toUpperCase()}] ${title}**\n${message}`;
+    // 3. Send main feedback message
+    const mainContent = `
+      <b>${type.toUpperCase()}</b><br/><br/>
+      <b>Title:</b> ${title}<br/><br/>
+      <b>Details:</b> ${message}<br/>
+    `;
 
     const messageRes = await axios.post(
-      `https://graph.microsoft.com/v1.0/teams/${teamId}/channels/${channelId}/messages`,
+      TEAMS_API_ENDPOINTS.postMessage(teamId, channelId),
       {
-        body: { content: mainContent },
+        body: {
+          contentType: 'html',
+          content: mainContent
+        },
       },
       {
         headers: {
@@ -63,15 +127,21 @@ export const sendToTeams = async (
 
     const messageId = messageRes.data.id;
 
-    // 3. Reply with uploaded file names
-    if (uploadedFileNames.length > 0) {
-      const fileList = uploadedFileNames.map(name => `• ${name}`).join('\n');
-      const replyMessage = `**Attached Files:**\n${fileList}`;
+    // 4. Threaded reply with file links
+    if (uploadedFiles.length > 0) {
+      const fileLinks = uploadedFiles
+        .map(f => `• <a href="${f.webUrl}" target="_blank">${f.name}</a>`)
+        .join('<br/>');
+
+      const replyMessage = `<b>Attachments:</b><br/>${fileLinks}`;
 
       await axios.post(
-        `https://graph.microsoft.com/v1.0/teams/${teamId}/channels/${channelId}/messages/${messageId}/replies`,
+        TEAMS_API_ENDPOINTS.postReply(teamId, channelId, messageId),
         {
-          body: { content: replyMessage },
+          body: {
+            contentType: 'html',
+            content: replyMessage
+          },
         },
         {
           headers: {
@@ -82,12 +152,9 @@ export const sendToTeams = async (
       );
     }
 
-    console.log('[Teams] Feedback with threaded attachments sent successfully');
+    console.log('[Teams] Feedback message and file links sent.');
   } catch (err: any) {
-    console.error(
-      '[Teams] Failed to send threaded feedback:',
-      err.message || err,
-    );
+    console.error('[Teams] Failed to send feedback:', err.message || err);
     throw err;
   }
 };

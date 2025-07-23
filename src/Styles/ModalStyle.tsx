@@ -169,11 +169,13 @@ export const ModalStyles = StyleSheet.create({
   },
   errorLabel: {
     fontSize: 15,
+    letterSpacing:1.2,
     color: colors.status.error.text,
     marginLeft: 4,
   },
   successLabel: {
     fontSize: 15,
+    letterSpacing: 1.2,
     color: colors.status.success.text,
     marginLeft: 4,
   },
