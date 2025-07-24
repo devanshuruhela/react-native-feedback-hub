@@ -2,6 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/react-native-feedbacks.svg)](https://badge.fury.io/js/react-native-feedbacks)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/devanshuruhela){:target="_blank"}
 
 A comprehensive React Native SDK for collecting user feedback with seamless integration to **Slack**, **Jira**, and **Microsoft Teams**. Features include screenshot capture, screen recording, and customizable UI.
 
