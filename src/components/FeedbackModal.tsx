@@ -48,7 +48,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
     setTitle,
     setType
   } = useFeedback();
-  const { start, stop, videoUri, setVideoUri } = useScreenRecorder();
+  const { start, stop, videoUri, setVideoUri, cleanup } = useScreenRecorder();
   const { granted, requestPermission } = useStoragePermission();
   const disableSubmit = !title || !message;
   const [visible, setVisible] = useState<boolean>(true);
@@ -91,11 +91,15 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
     setVisible(true);
   };
 
-  const handleCancelAndClear = () => {
+  const handleCancelAndClear = async () => {
     setTitle('');
     setMessage('');
     setScreenshot('');
-    setVideoUri('');
+    if (videoUri) {
+      await cleanup();
+    } else {
+      setVideoUri('');
+    }
   };
 
   const handleSubmit = async () => {
@@ -114,7 +118,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
       if (jiraConfig) await sendToJira(payload, jiraConfig);
       if (microsoftTeamsConfig)
         await sendToTeams(payload, microsoftTeamsConfig);
-      handleCancelAndClear();
+      await handleCancelAndClear();
       setIsPending(false);
       setStatus('success');
       setTimeout(() => {
@@ -264,7 +268,13 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                 screenshotUri={screenshot}
                 recordingUri={videoUri}
                 onRemoveScreenshot={() => setScreenshot(null)}
-                onRemoveRecording={() => setVideoUri(null)}
+                onRemoveRecording={() => {
+                  if(videoUri){
+                    cleanup();
+                  }else{
+                    setVideoUri(null);
+                  }
+                }}
               />
               <View style={styles.actions}>
                 <TouchableOpacity
