@@ -59,7 +59,7 @@ For Android, add the following permissions to your `AndroidManifest.xml`:
 - [x] Slack
 - [x] Jira (Atlassian Cloud)
 - [x] Microsoft Teams (Graph API)
-- [ ] Discord _(upcoming)_
+- [x] Discord (Webhook URL)
 - [ ] Zendesk _(upcoming)_
 - [ ] Trello _(upcoming)_
 
@@ -117,7 +117,21 @@ For Android, add the following permissions to your `AndroidManifest.xml`:
 
 ---
 
-### 3️⃣ Microsoft Teams Integration (via Microsoft Graph API)
+### 3️⃣ Discord Integration
+
+#### ✅ Required Inputs
+- Discord **Webhook URL**
+
+#### 📌 Setup
+1. Go to your Discord server settings
+2. Click on Integrations
+3. Create a new Webhook
+4. Select the channel you want to post messages to
+5. Copy the Webhook URL
+
+---
+
+### 4️⃣ Microsoft Teams Integration (via Microsoft Graph API)
 
 #### ✅ Required Inputs
 - Microsoft **Access Token** (Graph API)
@@ -152,10 +166,15 @@ const microsoftTeamsConfig = {
   channelId: '19:abc123@thread.tacv2',
 };
 
+const discordConfig = {
+  webhookUrl: 'https://discord.com/api/webhooks/12345.....'
+}
+
 const config = {
   slackConfig,
   jiraConfig,
   microsoftTeamsConfig,
+  discordConfig,
 };
 
 // you can add single or multiple supported configs
