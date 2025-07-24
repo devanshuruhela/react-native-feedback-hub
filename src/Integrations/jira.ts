@@ -1,7 +1,7 @@
 import { FeedbackPayload, JiraConfig } from '../types/types';
 import axios from 'axios';
-import mime from 'mime';
 import { JIRA_API_ENDPOINTS } from '../utils/endpoints';
+import { getFileNameAndType } from '../utils/getFileNameAndType';
 
 // Helper function to get available issue types for the project
 const getProjectIssueTypes = async (config: JiraConfig) => {
@@ -114,9 +114,7 @@ export const sendToJira = async (
 
     for (const uri of attachments) {
       try {
-        const fileName = uri.split('/').pop() || 'attachment';
-        const fileType = mime.getType(uri) || 'application/octet-stream';
-        
+        const {fileName ,fileType} = getFileNameAndType(uri);
         
         // For React Native, use FormData with file URI directly
         const formData = new FormData();

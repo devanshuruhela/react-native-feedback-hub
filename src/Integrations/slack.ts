@@ -1,9 +1,9 @@
 import axios from 'axios';
 import RNFS from 'react-native-fs';
-import mime from 'mime';
 import { FeedbackPayload, SlackConfig } from '../types/types';
 import { SLACK_API_ENDPOINTS } from '../utils/endpoints';
 import { convertToBytes } from '../utils/convertToBuytes';
+import { getFileNameAndType } from '../utils/getFileNameAndType';
 
 export const sendToSlack = async (
   payload: FeedbackPayload,
@@ -38,8 +38,7 @@ export const sendToSlack = async (
   };
 
   const uploadFileExternal = async (uri: string, threadTs: string) => {
-    const fileName = uri.split('/').pop() || 'attachment';
-    const fileType = mime.getType(uri) || 'application/octet-stream';
+    const {fileName ,fileType} = getFileNameAndType(uri);
     const fileStat = await RNFS.stat(uri);
     const fileLength = Number(fileStat.size);
 

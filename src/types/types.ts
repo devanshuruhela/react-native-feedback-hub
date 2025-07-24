@@ -26,12 +26,18 @@ export interface MicrosoftTeamsConfig {
   channelId: string; 
 };
 
+export interface DiscordConfig {
+  webhookUrl: string;
+}
+
+
 export interface FeedbackContextType {
   toggleModal: () => void;
   toggleRecording: () => void;
   slackConfig?: SlackConfig;
   jiraConfig?: JiraConfig;
-  microsoftTeamsConfig?: MicrosoftTeamsConfig
+  microsoftTeamsConfig?: MicrosoftTeamsConfig;
+  discordConfig?: DiscordConfig;
   isRecording: boolean;
   title: string;
   message: string;

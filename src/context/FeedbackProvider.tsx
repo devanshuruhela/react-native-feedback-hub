@@ -4,6 +4,7 @@ import FloatingButton from '../components/FloatingButton';
 import FeedbackModal from '../components/FeedbackModal';
 import { colors } from '../tokens/colors';
 import {
+  DiscordConfig,
   FeedbackButtonPositionType,
   FeedbackContextType,
   FeedbackType,
@@ -38,6 +39,7 @@ interface FeedbackProviderProps {
     jiraConfig?: JiraConfig;
     slackConfig?: SlackConfig;
     microsoftTeamsConfig?: MicrosoftTeamsConfig;
+    discordConfig?: DiscordConfig;
   };
   enabled?: boolean;
 }

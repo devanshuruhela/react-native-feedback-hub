@@ -1,9 +1,9 @@
 import axios from 'axios';
-import mime from 'mime';
 import { FeedbackPayload, MicrosoftTeamsConfig } from '../types/types';
 import { readFile } from 'react-native-fs';
 import { convertToBytes } from '../utils/convertToBuytes';
 import { TEAMS_API_ENDPOINTS } from '../utils/endpoints';
+import { getFileNameAndType } from '../utils/getFileNameAndType';
 
 export const sendToTeams = async (
   payload: FeedbackPayload,
@@ -48,8 +48,7 @@ export const sendToTeams = async (
 
     // 2. Upload each file
     for (const uri of fileUris) {
-      const fileName = uri.split('/').pop() || 'feedback_file';
-      const mimeType = mime.getType(uri) || 'application/octet-stream';
+        const {fileName , fileType} = getFileNameAndType(uri);
 
       try {
         const sessionRes = await axios.post(
@@ -77,7 +76,7 @@ export const sendToTeams = async (
           headers: {
             'Content-Length': fileBuffer.length,
             'Content-Range': `bytes 0-${fileBuffer.length - 1}/${fileBuffer.length}`,
-            'Content-Type': mimeType,
+            'Content-Type': fileType,
           },
         });
 

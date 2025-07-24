@@ -12,7 +12,9 @@ function App() {
 
   return (
     <FeedbackProvider
-      config={{}}
+      config={{discordConfig:{
+        webhookUrl: 'https://discord.com/api/webhooks/1398055334765133987/EVZxBpQMVXAmiHAhi_G1Jw8XZt2GB9YaCO6Hctw-GsOtpZhMh7dx5LQrkp226lLR-9vG'
+      }}}
       enabled
     >
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />

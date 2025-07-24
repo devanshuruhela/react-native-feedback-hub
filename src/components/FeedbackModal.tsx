@@ -31,12 +31,14 @@ import AttachmentPreview from './AttachmentPreview';
 import { useStoragePermission } from '../hooks/useStoragePermision';
 import { sendToTeams } from '../Integrations/teams';
 import { colors } from '../tokens/colors';
+import { sendToDiscord } from '../Integrations/discord';
 
 const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
   const {
     slackConfig,
     jiraConfig,
     microsoftTeamsConfig,
+    discordConfig,
     toggleRecording,
     isRecording,
     title,
@@ -118,6 +120,9 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
       if (jiraConfig) await sendToJira(payload, jiraConfig);
       if (microsoftTeamsConfig)
         await sendToTeams(payload, microsoftTeamsConfig);
+      if(discordConfig){
+        await sendToDiscord(payload, discordConfig)
+      }
       await handleCancelAndClear();
       setIsPending(false);
       setStatus('success');
