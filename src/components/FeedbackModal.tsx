@@ -20,7 +20,7 @@ import {
   CircleCheck,
   CircleX,
 } from 'lucide-react-native';
-import { useFeedback } from '../context/FeedbackProvider';
+import { useFeedback } from '../context/FeedbackHubProvider';
 import captureScreen from '../utils/captureScreen';
 import { sendToSlack } from '../Integrations/slack';
 import { sendToJira } from '../Integrations/jira';

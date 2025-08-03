@@ -46,7 +46,7 @@ interface FeedbackProviderProps {
   enabled?: boolean;
 }
 
-export const FeedbackProvider = ({
+export const FeedbackHubProvider = ({
   feedbackButtonPosition = {
     bottom: 30,
     right: 30,

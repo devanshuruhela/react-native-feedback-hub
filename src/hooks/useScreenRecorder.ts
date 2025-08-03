@@ -13,22 +13,32 @@ export function useScreenRecorder() {
   const [filePath, setFilePath] = useState<string | null>(null);
 
   const start = async (): Promise<string | null> => {
-    const res = await RecordScreen.startRecording({ mic: false, fps: 24, bitrate: 1024000 });
-    if (res === RecordingResult.PermissionError) {
+    try {
+      const res = await RecordScreen.startRecording({ mic: false, fps: 24, bitrate: 1024000 });
+      if (res === RecordingResult.PermissionError) {
+        return null;
+      }
+      return res;
+    } catch (error) {
+      console.warn('Error starting recording:', error);
       return null;
     }
-    return res;
   };
 
   const stop = async (): Promise<string | null> => {
-    const res = (await RecordScreen.stopRecording()) as StopRecordingResult;
-    if (res && res.result?.outputURL) {
-      const filePath = `file://${res.result.outputURL}`;
-      setVideoUri(filePath);
-      setFilePath(res.result.outputURL); 
-      return filePath;
+    try {
+      const res = (await RecordScreen.stopRecording()) as StopRecordingResult;
+      if (res && res.result?.outputURL) {
+        const path = `file://${res.result.outputURL}`;
+        setVideoUri(path);
+        setFilePath(res.result.outputURL); 
+        return path;
+      }
+      return null;
+    } catch (error) {
+      console.warn('Error stopping recording:', error);
+      return null;
     }
-    return null;
   };
 
   const cleanup = async () => {
