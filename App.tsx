@@ -5,18 +5,18 @@
  * @format
  */
 import { StatusBar, useColorScheme } from 'react-native';
-import { FeedbackProvider } from './src';
+import { FeedbackHubProvider } from './src';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <FeedbackProvider
+    <FeedbackHubProvider
       config={{}}
       enabled
     >
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-    </FeedbackProvider>
+    </FeedbackHubProvider>
   );
 }
 

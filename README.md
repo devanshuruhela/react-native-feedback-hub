@@ -179,15 +179,16 @@ const config = {
 
 // you can add single or multiple supported configs
 // Default value for feedbackButtonPosition is bottom: 30 and right: 30
+import { FeedbackHubProvider } from 'react-native-feedback-hub';
 
-<FeedbackProvider 
+<FeedbackHubProvider 
   config={config}
   feedbackButtonPosition={{bottom:30, right: 30}} 
   additionInfo={`UserId:${data.userId}`} // You can send addition Info along with feedback Detail
   enabled={condition...} // pass true to enable for All users
 >
     <App/>
-</FeedbackProvider>
+</FeedbackHubProvider>
 
 ```
 
