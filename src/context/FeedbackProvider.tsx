@@ -20,6 +20,7 @@ const FeedbackContext = createContext<FeedbackContextType>({
   title: '',
   message: '',
   screenshot: '',
+  additionalInfo: '',
   setTitle: () => {},
   setMessage: () => {},
   setScreenshot: () => {},
@@ -35,6 +36,7 @@ export const useFeedback = () => useContext(FeedbackContext);
 interface FeedbackProviderProps {
   children: React.ReactNode;
   feedbackButtonPosition?: FeedbackButtonPositionType;
+  additionalInfo?: string;
   config?: {
     jiraConfig?: JiraConfig;
     slackConfig?: SlackConfig;
@@ -52,6 +54,7 @@ export const FeedbackProvider = ({
   children,
   config,
   enabled = false,
+  additionalInfo = '',
 }: FeedbackProviderProps) => {
   const [visible, setVisible] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -73,6 +76,7 @@ export const FeedbackProvider = ({
         toggleRecording,
         title,
         message,
+        additionalInfo,
         screenshot,
         setTitle,
         setMessage,

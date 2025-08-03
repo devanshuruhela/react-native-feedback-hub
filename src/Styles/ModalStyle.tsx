@@ -46,14 +46,14 @@ export const ModalStyles = StyleSheet.create({
   },
   typeButton: {
     flexDirection: 'row',
+    flex: 1,
     alignItems: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+    justifyContent:'center',
+    paddingVertical: 8,
     borderRadius: 6,
-    borderWidth: 1,
+    borderWidth: 4,
     borderColor: colors.border.light,
     backgroundColor: colors.text.primary,
-    marginRight: 8,
   },
   activeBug: {
     backgroundColor: colors.status.error.background,
@@ -64,7 +64,7 @@ export const ModalStyles = StyleSheet.create({
     borderColor: colors.status.success.border,
   },
   typeText: {
-    fontSize: 12,
+    fontSize: 16,
     color: colors.text.inverse,
   },
   activeBugText: {

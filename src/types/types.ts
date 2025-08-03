@@ -41,6 +41,7 @@ export interface FeedbackContextType {
   isRecording: boolean;
   title: string;
   message: string;
+  additionalInfo?: string;
   screenshot: string | null;
   type: FeedbackType;
   setTitle: React.Dispatch<React.SetStateAction<string>>;

@@ -44,6 +44,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
     title,
     type,
     message,
+    additionalInfo,
     screenshot,
     setMessage,
     setScreenshot,
@@ -97,6 +98,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
     setTitle('');
     setMessage('');
     setScreenshot('');
+    setType('bug')
     if (videoUri) {
       await cleanup();
     } else {
@@ -110,7 +112,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
     try {
       const payload: FeedbackPayload = {
         title,
-        message,
+        message: `${message}\n${additionalInfo}`,
         type,
         screenshot,
         video: videoUri,
@@ -150,7 +152,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
       <Pressable style={styles.overlay} onPress={onClose}>
         <View style={styles.modal}>
           <View style={styles.header}>
-            <Text style={styles.title}>Send Feedback</Text>
+            <Text style={styles.title}>Feedback Hub</Text>
             <Pressable onPress={onClose}>
               <X color={colors.text.muted} />
             </Pressable>
@@ -177,7 +179,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                     ]}
                   >
                     {' '}
-                    Bug Report
+                    Bug
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -304,7 +306,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                   {isPending ? (
                     <ActivityIndicator color={colors.text.white} />
                   ) : (
-                    <Text style={styles.primaryText}>Send Feedback</Text>
+                    <Text style={styles.primaryText}>{`${type === 'bug' ? 'Report Bug' : 'Send Suggestion'}`}</Text>
                   )}
                 </TouchableOpacity>
               </View>

@@ -184,6 +184,7 @@ const config = {
 <FeedbackProvider 
   config={config}
   feedbackButtonPosition={{bottom:30, right: 30}} 
+  additionInfo={`UserId:${data.userId}`} // You can send addition Info along with feedback Detail
   enabled={condition...} // pass true to enable for All users
 >
     <App/>
