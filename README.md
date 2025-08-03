@@ -1,6 +1,6 @@
 # 📦 React Native Feedbacks
 
-[![npm version](https://badge.fury.io/js/react-native-feedbacks.svg)](https://badge.fury.io/js/react-native-feedbacks)
+[![npm version](https://badge.fury.io/js/react-native-feedback-hub.svg)](https://badge.fury.io/js/react-native-feedback-hub)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [!["Buy Me A Coffee"](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-orange?logo=buy-me-a-coffee)](https://buymeacoffee.com/devanshuruhela)
 
@@ -20,9 +20,9 @@ A comprehensive React Native SDK for collecting user feedback with seamless inte
 ## 📦 Installation
 
 ```bash
-npm install react-native-feedbacks
+npm install react-native-feedback-hub
 # or
-yarn add react-native-feedbacks
+yarn add react-native-feedback-hub
 ```
 
 ### Peer Dependencies
