@@ -224,9 +224,10 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                 placeholder="Please provide more details about your feedback..."
                 placeholderTextColor={colors.text.muted}
                 multiline
+                editable
                 scrollEnabled
-                enterKeyHint="done"
-                submitBehavior="blurAndSubmit"
+                submitBehavior='newline'
+                blurOnSubmit={false}
               />
 
               <Text style={styles.label}>Attachments</Text>

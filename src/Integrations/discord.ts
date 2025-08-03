@@ -4,10 +4,10 @@ import { getFileNameAndType } from '../utils/getFileNameAndType';
 
 export const sendToDiscord = async (
   payload: FeedbackPayload,
-  config: DiscordConfig
+  config: DiscordConfig,
 ): Promise<void> => {
   const { webhookUrl } = config;
-  const {message ,title,type , screenshot: screenshot , video} = payload;
+  const { message, title, type, screenshot: screenshot, video } = payload;
 
   if (!webhookUrl) {
     console.warn('Discord webhook URL not provided');
@@ -19,26 +19,25 @@ export const sendToDiscord = async (
   form.append(
     'content',
     `\n[${type.toUpperCase()}]\n**Title:** ${title}\n**Message:**\n${message}`,
-
   );
 
   if (screenshot) {
-     const {fileName ,fileType} = getFileNameAndType(screenshot);
+    const { fileName, fileType } = getFileNameAndType(screenshot);
     form.append('file' + 1, {
-        uri: screenshot,
-        name: `file_1.${fileName}`,
-        type: fileType,
-      });
-    } 
+      uri: screenshot,
+      name: `file_1.${fileName}`,
+      type: fileType,
+    });
+  }
 
   if (video) {
-    const {fileName ,fileType} = getFileNameAndType(video);
+    const { fileName, fileType } = getFileNameAndType(video);
     form.append('file' + 2, {
-        uri: video,
-        name: `file_2.${fileName}`,
-        type: fileType,
-      });
-    } 
+      uri: video,
+      name: `file_2.${fileName}`,
+      type: fileType,
+    });
+  }
 
   try {
     await axios.post(webhookUrl, form, {
@@ -47,7 +46,7 @@ export const sendToDiscord = async (
       },
     });
     console.info('Feedback sent to Discord successfully.');
-  } catch (error) {
-    console.error('Failed to send feedback to Discord:', error);
+  } catch (err) {
+    throw Error('Failed to send feedback to Discord:',);
   }
 };

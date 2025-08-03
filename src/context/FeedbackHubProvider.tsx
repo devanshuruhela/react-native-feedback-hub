@@ -87,7 +87,7 @@ export const FeedbackHubProvider = ({
       }}
     >
       <View style={styles.flex}>
-        {enabled ? (
+        {enabled && config && Object.keys(config).length ? (
           <>
             {children}
             {

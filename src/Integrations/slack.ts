@@ -102,5 +102,6 @@ export const sendToSlack = async (
     console.log('[Slack] Report sent successfully');
   } catch (err) {
     console.error('[Slack] Error sending report:', err);
+    throw Error
   }
 };

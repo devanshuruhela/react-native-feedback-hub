@@ -12,7 +12,9 @@ function App() {
 
   return (
     <FeedbackHubProvider
-      config={{}}
+      config={{discordConfig:{
+        webhookUrl:''
+      }}}
       enabled
     >
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
