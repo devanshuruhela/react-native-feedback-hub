@@ -1,4 +1,4 @@
-# 📦 React Native Feedbacks
+# 📦 React Native Feedback Hub
 
 [![npm version](https://badge.fury.io/js/react-native-feedback-hub.svg)](https://badge.fury.io/js/react-native-feedback-hub)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
