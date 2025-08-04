@@ -6,6 +6,8 @@
 
 A comprehensive React Native SDK for collecting user feedback with seamless integration to **Slack**, **Jira**, **Discord** and **Microsoft Teams**. Features include screenshot capture, screen recording, and customizable UI.
 
+<img src="https://github.com/user-attachments/assets/a0042065-dc11-41a8-8041-32c82c68c827" width="250" />
+
 ## ✨ Features
 
 - 🚀 **Multi-platform Integration**: Slack, Jira, Discord, Microsoft Teams
