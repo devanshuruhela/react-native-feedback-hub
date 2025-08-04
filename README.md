@@ -1,6 +1,6 @@
 # 📦 React Native Feedback Hub
 
-[![npm version](https://badge.fury.io/js/react-native-feedback-hub.svg)](https://badge.fury.io/js/react-native-feedback-hub)
+[![npm version](https://img.shields.io/npm/v/react-native-feedback-hub.svg?cacheSeconds=3600)](https://www.npmjs.com/package/react-native-feedback-hub)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [!["Buy Me A Coffee"](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-orange?logo=buy-me-a-coffee)](https://buymeacoffee.com/devanshuruhela)
 
