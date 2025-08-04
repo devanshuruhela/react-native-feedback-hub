@@ -35,6 +35,9 @@ npm install react-native-svg react-native-fs react-native-view-shot react-native
 yarn add react-native-svg react-native-fs react-native-view-shot react-native-record-screen react-native-create-thumbnail
 ```
 
+If IOS build fails due to react-native-record-screen:
+Use [Patch](https://github.com/devanshuruhela/react-native-feedback-hub/blob/main/patches/react-native-record-screen%2B0.6.2.patch)
+
 ### Platform Setup
 
 For iOS, add the following permissions to your `Info.plist`:
