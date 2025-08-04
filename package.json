@@ -23,9 +23,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/devanshuruhela/RNFeedback"
+    "url": "https://github.com/devanshuruhela/react-native-feedback-hub"
   },
-  "homepage": "https://devanshu.dev",
+  "homepage": "https://react-native-feedback-hub.web.app/",
   "license": "MIT",
   "author": "Devanshu Ruhela",
   "scripts": {
