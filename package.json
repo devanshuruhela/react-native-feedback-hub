@@ -38,7 +38,10 @@
     "build": "tsc -p tsconfig.build.json",
     "clean": "rimraf lib/",
     "prepublishOnly": "npm run clean && npm run build",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "bump-patch": "npm version patch",
+    "bump-minor": "npm version minor",
+    "bump-major": "npm version major"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
