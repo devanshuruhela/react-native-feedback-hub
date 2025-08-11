@@ -166,7 +166,7 @@ const jiraConfig = {
 };
 
 const microsoftTeamsConfig = {
-  accessToken: 'Bearer eyJ0eXAiOiJK...',
+  accessToken: 'eyJ0eXAiOiJK...',
   teamId: 'e4d4c9a6-...',
   channelId: '19:abc123@thread.tacv2',
 };
