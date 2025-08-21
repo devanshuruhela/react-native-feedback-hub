@@ -1,6 +1,6 @@
 {
   "name": "react-native-feedback-hub",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "private": false,
   "description": "React Native feedback SDK with Slack, Jira, Discord and Microsoft Teams integration",
   "main": "lib/index.js",
