@@ -16,6 +16,7 @@ function App() {
         webhookUrl:''
       }}}
       enabled
+
     >
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </FeedbackHubProvider>

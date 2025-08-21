@@ -4,17 +4,14 @@ import FloatingButton from '../components/FloatingButton';
 import FeedbackModal from '../components/FeedbackModal';
 import { colors } from '../tokens/colors';
 import {
-  DiscordConfig,
-  FeedbackButtonPositionType,
   FeedbackContextType,
+  FeedbackProviderProps,
   FeedbackType,
-  JiraConfig,
-  MicrosoftTeamsConfig,
-  SlackConfig,
 } from '../types/types';
+import { useModalBackHandler } from '../hooks/useBackHandler';
 
 const FeedbackContext = createContext<FeedbackContextType>({
-  toggleModal: () => {},
+  setModalVisible: () => {},
   toggleRecording: () => {},
   isRecording: false,
   title: '',
@@ -28,23 +25,19 @@ const FeedbackContext = createContext<FeedbackContextType>({
   slackConfig: undefined,
   jiraConfig: undefined,
   microsoftTeamsConfig: undefined,
+  webhook: undefined,
   type: 'bug',
 });
 
 export const useFeedback = () => useContext(FeedbackContext);
 
-interface FeedbackProviderProps {
-  children: React.ReactNode;
-  feedbackButtonPosition?: FeedbackButtonPositionType;
-  additionalInfo?: string;
-  config?: {
-    jiraConfig?: JiraConfig;
-    slackConfig?: SlackConfig;
-    microsoftTeamsConfig?: MicrosoftTeamsConfig;
-    discordConfig?: DiscordConfig;
+export const useFeedbackHub = () => {
+  const { setModalVisible } = useFeedback();
+  return {
+    open: () => setModalVisible(true),
+    close: () => setModalVisible(false),
   };
-  enabled?: boolean;
-}
+};
 
 export const FeedbackHubProvider = ({
   feedbackButtonPosition = {
@@ -53,8 +46,11 @@ export const FeedbackHubProvider = ({
   },
   children,
   config,
-  enabled = false,
+  enabled = true,
   additionalInfo = '',
+  showFloatingButton = true,
+  enableScreenRecording = true,
+  enableScreenShot = true,
 }: FeedbackProviderProps) => {
   const [visible, setVisible] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -62,16 +58,20 @@ export const FeedbackHubProvider = ({
   const [message, setMessage] = useState('');
   const [screenshot, setScreenshot] = useState<string | null>(null);
   const [type, setType] = useState<FeedbackType>('bug');
-
-  const toggleModal = useCallback(() => setVisible(!visible), [visible]);
+  const setModalVisible = useCallback(
+    (value: boolean) => setVisible(value),
+    [],
+  );
   const toggleRecording = useCallback(
     () => setIsRecording(!isRecording),
     [isRecording],
   );
+
+  useModalBackHandler(visible, () => setModalVisible(false));
   return (
     <FeedbackContext.Provider
       value={{
-        toggleModal,
+        setModalVisible,
         isRecording,
         toggleRecording,
         title,
@@ -90,14 +90,20 @@ export const FeedbackHubProvider = ({
         {enabled && config && Object.keys(config).length ? (
           <>
             {children}
-            {
+            {showFloatingButton && (
               <FloatingButton
                 buttonPosition={feedbackButtonPosition}
-                onPress={toggleModal}
+                onPress={() => setModalVisible(true)}
                 isRecording={isRecording}
               />
-            }
-            {visible && <FeedbackModal onClose={toggleModal} />}
+            )}
+            {visible && (
+              <FeedbackModal
+                onClose={() => setModalVisible(false)}
+                isScreenRecordingEnabled={enableScreenRecording}
+                isScreenShotEnabled={enableScreenShot}
+              />
+            )}
             {isRecording && (
               <View pointerEvents="none" style={styles.RecordingView} />
             )}

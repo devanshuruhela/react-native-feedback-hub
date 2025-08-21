@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [!["Buy Me A Coffee"](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-orange?logo=buy-me-a-coffee)](https://buymeacoffee.com/devanshuruhela)
 
-A comprehensive React Native SDK for collecting user feedback with seamless integration to **Slack**, **Jira**, **Discord** and **Microsoft Teams**. Features include screenshot capture, screen recording, and customizable UI.
+A comprehensive React Native SDK for collecting user feedback with seamless integration to **Slack**, **Jira**, **Discord** and **Microsoft Teams** or your **Custom Webhook**. Features include screenshot capture, screen recording, and customizable UI.
 
 <img src="https://github.com/user-attachments/assets/a0042065-dc11-41a8-8041-32c82c68c827" width="250" />
 
@@ -175,11 +175,14 @@ const discordConfig = {
   webhookUrl: 'https://discord.com/api/webhooks/12345.....'
 }
 
+const webhook = 'https://......'
+
 const config = {
   slackConfig,
   jiraConfig,
   microsoftTeamsConfig,
   discordConfig,
+  webhook,
 };
 
 // you can add single or multiple supported configs
@@ -191,6 +194,9 @@ import { FeedbackHubProvider } from 'react-native-feedback-hub';
   feedbackButtonPosition={{bottom:30, right: 30}} 
   additionInfo={`UserId:${data.userId}`} // You can send addition Info along with feedback Detail
   enabled={condition...} // pass true to enable for All users
+  showFloatingButton = true, // by default true
+  enableScreenRecording = true, // by default true
+  enableScreenShot = true, //by default true
 >
     <App/>
 </FeedbackHubProvider>

@@ -23,21 +23,38 @@ export interface SlackConfig {
 export interface MicrosoftTeamsConfig {
   accessToken: string;
   teamId: string;
-  channelId: string; 
-};
+  channelId: string;
+}
 
 export interface DiscordConfig {
   webhookUrl: string;
 }
 
+export interface FeedbackProviderProps {
+  children: React.ReactNode;
+  feedbackButtonPosition?: FeedbackButtonPositionType;
+  additionalInfo?: string;
+  config?: {
+    jiraConfig?: JiraConfig;
+    slackConfig?: SlackConfig;
+    microsoftTeamsConfig?: MicrosoftTeamsConfig;
+    discordConfig?: DiscordConfig;
+    webhook?: string;
+  };
+  enabled?: boolean;
+  showFloatingButton?: boolean;
+  enableScreenShot?: boolean;
+  enableScreenRecording?: boolean;
+}
 
 export interface FeedbackContextType {
-  toggleModal: () => void;
+  setModalVisible: (value: boolean) => void;
   toggleRecording: () => void;
   slackConfig?: SlackConfig;
   jiraConfig?: JiraConfig;
   microsoftTeamsConfig?: MicrosoftTeamsConfig;
   discordConfig?: DiscordConfig;
+  webhook?: string;
   isRecording: boolean;
   title: string;
   message: string;
@@ -47,7 +64,7 @@ export interface FeedbackContextType {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
   setScreenshot: React.Dispatch<React.SetStateAction<string | null>>;
-  setType: React.Dispatch<React.SetStateAction<FeedbackType>>
+  setType: React.Dispatch<React.SetStateAction<FeedbackType>>;
 }
 
 export interface FeedbackButtonPositionType {

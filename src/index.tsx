@@ -1,4 +1,4 @@
-export { FeedbackHubProvider } from './context/FeedbackHubProvider';
+export { FeedbackHubProvider, useFeedbackHub } from './context/FeedbackHubProvider';
 
 export type {
   JiraConfig,

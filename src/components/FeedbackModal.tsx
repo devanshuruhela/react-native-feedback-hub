@@ -1,25 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   Modal,
   Pressable,
-  ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import {
-  Bug,
-  Lightbulb,
-  Camera,
-  Video,
-  Square,
-  Circle,
-  X,
-  CircleCheck,
-  CircleX,
-} from 'lucide-react-native';
+import { Circle, X, CircleCheck, CircleX } from 'lucide-react-native';
 import { useFeedback } from '../context/FeedbackHubProvider';
 import captureScreen from '../utils/captureScreen';
 import { sendToSlack } from '../Integrations/slack';
@@ -32,13 +20,28 @@ import { useStoragePermission } from '../hooks/useStoragePermision';
 import { sendToTeams } from '../Integrations/teams';
 import { colors } from '../tokens/colors';
 import { sendToDiscord } from '../Integrations/discord';
+import TypeSelector from './TypeSelector';
+import Attachments from './AttachmentButtons';
+import Actions from './PrimaryActions';
+import { sendToWebhook } from '../Integrations/webhook';
 
-const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
+type TFeedbackModal = {
+  onClose: () => void;
+  isScreenShotEnabled?: boolean;
+  isScreenRecordingEnabled?: boolean;
+};
+
+const FeedbackModal = ({
+  onClose,
+  isScreenRecordingEnabled,
+  isScreenShotEnabled,
+}: TFeedbackModal) => {
   const {
     slackConfig,
     jiraConfig,
     microsoftTeamsConfig,
     discordConfig,
+    webhook,
     toggleRecording,
     isRecording,
     title,
@@ -49,7 +52,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
     setMessage,
     setScreenshot,
     setTitle,
-    setType
+    setType,
   } = useFeedback();
   const { start, stop, videoUri, setVideoUri, cleanup } = useScreenRecorder();
   const { granted, requestPermission } = useStoragePermission();
@@ -59,21 +62,19 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
   const [status, setStatus] = useState<'success' | 'failed' | undefined>(
     undefined,
   );
-  const  scrollViewRef = useRef<ScrollView>(null)
+  const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     requestPermission();
   }, [requestPermission]);
 
-
   useEffect(() => {
     if (status || screenshot || videoUri) {
       scrollViewRef.current?.scrollToEnd();
     }
-  }, [screenshot, status, videoUri])
-  
+  }, [screenshot, status, videoUri]);
 
-  const handleRecording = async () => {
+  const handleRecording = React.useCallback(async () => {
     if (!isRecording) {
       const res = await start();
       if (res === 'started') {
@@ -84,29 +85,37 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
       await stop();
       toggleRecording();
     }
-  };
+  }, [isRecording, onClose, start, stop, toggleRecording]);
 
-  const handleCapture = async () => {
-    setVisible(false);  
+  const handleCapture = useCallback(async () => {
+    setVisible(false);
     await new Promise(res => setTimeout(res, 200));
     const shot = await captureScreen();
     setScreenshot(shot);
     setVisible(true);
-  };
+  }, [setScreenshot]);
 
-  const handleCancelAndClear = async () => {
+  const handleCancelAndClear = useCallback(async () => {
     setTitle('');
     setMessage('');
     setScreenshot('');
-    setType('bug')
+    setType('bug');
     if (videoUri) {
       await cleanup();
     } else {
       setVideoUri('');
     }
-  };
+  }, [
+    cleanup,
+    setMessage,
+    setScreenshot,
+    setTitle,
+    setType,
+    setVideoUri,
+    videoUri,
+  ]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     setStatus(undefined);
     setIsPending(true);
     try {
@@ -122,8 +131,11 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
       if (jiraConfig) await sendToJira(payload, jiraConfig);
       if (microsoftTeamsConfig)
         await sendToTeams(payload, microsoftTeamsConfig);
-      if(discordConfig){
-        await sendToDiscord(payload, discordConfig)
+      if (discordConfig) {
+        await sendToDiscord(payload, discordConfig);
+      }
+      if (webhook) {
+        await sendToWebhook(payload, webhook);
       }
       await handleCancelAndClear();
       setIsPending(false);
@@ -136,13 +148,27 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
       setIsPending(false);
       console.error('Feedback submission failed:', error);
     }
-  };
+  }, [
+    additionalInfo,
+    discordConfig,
+    handleCancelAndClear,
+    jiraConfig,
+    message,
+    microsoftTeamsConfig,
+    onClose,
+    screenshot,
+    slackConfig,
+    title,
+    type,
+    videoUri,
+    webhook,
+  ]);
 
   if (!granted || !visible) {
     return null;
   }
 
-  return (  
+  return (
     <Modal
       animationType="fade"
       transparent
@@ -159,51 +185,7 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
           </View>
           <ScrollView ref={scrollViewRef}>
             <Pressable style={styles.form}>
-              <Text style={styles.label}>Type</Text>
-              <View style={styles.typeButtons}>
-                <TouchableOpacity
-                  style={[
-                    styles.typeButton,
-                    type === 'bug' && styles.activeBug,
-                  ]}
-                  onPress={() => setType('bug')}
-                >
-                  <Bug
-                    size={16}
-                    color={type === 'bug' ? colors.status.error.text : colors.text.inverse}
-                  />
-                  <Text
-                    style={[
-                      styles.typeText,
-                      type === 'bug' && styles.activeBugText,
-                    ]}
-                  >
-                    {' '}
-                    Bug
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.typeButton,
-                    type === 'suggestion' && styles.activeSuggestion,
-                  ]}
-                  onPress={() => setType('suggestion')}
-                >
-                  <Lightbulb
-                    size={16}
-                    color={type === 'suggestion' ? colors.status.success.text : colors.text.inverse}
-                  />
-                  <Text
-                    style={[
-                      styles.typeText,
-                      type === 'suggestion' && styles.activeSuggestionText,
-                    ]}
-                  >
-                    {' '}
-                    Suggestion
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <TypeSelector type={type} setType={setType} />
 
               <Text style={styles.label}>Title</Text>
               <TextInput
@@ -226,47 +208,33 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                 multiline
                 editable
                 scrollEnabled
-                submitBehavior='newline'
+                submitBehavior="newline"
                 blurOnSubmit={false}
               />
 
-              <Text style={styles.label}>Attachments</Text>
-              <View style={styles.attachments}>
-                <TouchableOpacity
-                  style={styles.attachmentButton}
-                  onPress={handleCapture}
-                >
-                  <Camera size={16} color={colors.text.muted} />
-                  <Text style={styles.attachmentText}> Screenshot</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.attachmentButton,
-                    isRecording && styles.recording,
-                  ]}
-                  onPress={handleRecording}
-                >
-                  {isRecording ? (
-                    <Square size={16} color={colors.status.error.text} />
-                  ) : (
-                    <Video size={16} color={colors.text.muted} />
-                  )}
-                  <Text
-                    style={[
-                      styles.attachmentText,
-                      isRecording && styles.recordingText,
-                    ]}
-                  >
-                    {isRecording ? ' Stop Recording' : ' Record Screen'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              {(isScreenShotEnabled || isScreenRecordingEnabled) && (
+                <Text style={styles.label}>
+                  {isScreenShotEnabled && isScreenRecordingEnabled
+                    ? 'Attachments'
+                    : 'Attachment'}
+                </Text>
+              )}
+              <Attachments
+                isScreenShotEnabled={isScreenShotEnabled}
+                isScreenRecordingEnabled={isScreenRecordingEnabled}
+                isRecording={isRecording}
+                handleCapture={handleCapture}
+                handleRecording={handleRecording}
+              />
 
               {isRecording && (
                 <View style={styles.recordingIndicator}>
-                  <Circle size={12} color={colors.status.warning.text} fill={colors.status.warning.text} />
+                  <Circle
+                    size={12}
+                    color={colors.status.warning.text}
+                    fill={colors.status.warning.text}
+                  />
                   <Text style={styles.recordingLabel}>
-                    {' '}
                     Recording in progress...
                   </Text>
                 </View>
@@ -277,40 +245,21 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                 recordingUri={videoUri}
                 onRemoveScreenshot={() => setScreenshot(null)}
                 onRemoveRecording={() => {
-                  if(videoUri){
+                  if (videoUri) {
                     cleanup();
-                  }else{
+                  } else {
                     setVideoUri(null);
                   }
                 }}
               />
-              <View style={styles.actions}>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleCancelAndClear();
-                    onClose();
-                  }}
-                  style={[styles.button, styles.secondaryButton]}
-                >
-                  <Text style={styles.secondaryText}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={handleSubmit}
-                  style={[
-                    styles.button,
-                    disableSubmit
-                      ? styles.primaryButtonDisabled
-                      : styles.primaryButton,
-                  ]}
-                  disabled={disableSubmit || isPending}
-                >
-                  {isPending ? (
-                    <ActivityIndicator color={colors.text.white} />
-                  ) : (
-                    <Text style={styles.primaryText}>{`${type === 'bug' ? 'Report Bug' : 'Send Suggestion'}`}</Text>
-                  )}
-                </TouchableOpacity>
-              </View>
+              <Actions
+                handleCancelAndClear={handleCancelAndClear}
+                onClose={onClose}
+                handleSubmit={handleSubmit}
+                disableSubmit={disableSubmit}
+                isPending={isPending}
+                type={type}
+              />
               {status && (
                 <View style={styles.statusNudge}>
                   {status === 'success' ? (
@@ -325,7 +274,6 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
                         : styles.errorLabel
                     }
                   >
-                    {' '}
                     {status === 'success'
                       ? 'Feedback submitted successfully!'
                       : 'Failed to submit feedback, try again!'}
@@ -335,10 +283,8 @@ const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
             </Pressable>
           </ScrollView>
         </View>
-   
-      </Pressable>  
-    </Modal>    
-  
+      </Pressable>
+    </Modal>
   );
 };
 
