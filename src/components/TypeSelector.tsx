@@ -22,6 +22,7 @@ const TypeSelector = ({
         color={type === 'bug' ? colors.status.error.text : colors.text.inverse}
       />
       <Text style={[styles.typeText, type === 'bug' && styles.activeBugText]}>
+        {' '}
         Bug
       </Text>
     </TouchableOpacity>
@@ -46,6 +47,7 @@ const TypeSelector = ({
           type === 'suggestion' && styles.activeSuggestionText,
         ]}
       >
+        {' '}
         Suggestion
       </Text>
     </TouchableOpacity>

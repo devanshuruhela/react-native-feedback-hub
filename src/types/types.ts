@@ -56,6 +56,7 @@ export interface FeedbackContextType {
   discordConfig?: DiscordConfig;
   webhook?: string;
   isRecording: boolean;
+  visible?: boolean;
   title: string;
   message: string;
   additionalInfo?: string;

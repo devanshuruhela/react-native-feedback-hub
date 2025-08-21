@@ -8,12 +8,12 @@ import {
   FeedbackProviderProps,
   FeedbackType,
 } from '../types/types';
-import { useModalBackHandler } from '../hooks/useBackHandler';
 
 const FeedbackContext = createContext<FeedbackContextType>({
   setModalVisible: () => {},
   toggleRecording: () => {},
   isRecording: false,
+  visible: false,
   title: '',
   message: '',
   screenshot: '',
@@ -32,8 +32,9 @@ const FeedbackContext = createContext<FeedbackContextType>({
 export const useFeedback = () => useContext(FeedbackContext);
 
 export const useFeedbackHub = () => {
-  const { setModalVisible } = useFeedback();
+  const { visible, setModalVisible } = useFeedback();
   return {
+    isOpen: visible,
     open: () => setModalVisible(true),
     close: () => setModalVisible(false),
   };
@@ -67,12 +68,12 @@ export const FeedbackHubProvider = ({
     [isRecording],
   );
 
-  useModalBackHandler(visible, () => setModalVisible(false));
   return (
     <FeedbackContext.Provider
       value={{
         setModalVisible,
         isRecording,
+        visible,
         toggleRecording,
         title,
         message,
@@ -97,13 +98,11 @@ export const FeedbackHubProvider = ({
                 isRecording={isRecording}
               />
             )}
-            {visible && (
-              <FeedbackModal
-                onClose={() => setModalVisible(false)}
-                isScreenRecordingEnabled={enableScreenRecording}
-                isScreenShotEnabled={enableScreenShot}
-              />
-            )}
+            <FeedbackModal
+              onClose={() => setModalVisible(false)}
+              isScreenRecordingEnabled={enableScreenRecording}
+              isScreenShotEnabled={enableScreenShot}
+            />
             {isRecording && (
               <View pointerEvents="none" style={styles.RecordingView} />
             )}

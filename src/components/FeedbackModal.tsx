@@ -53,11 +53,12 @@ const FeedbackModal = ({
     setScreenshot,
     setTitle,
     setType,
+    setModalVisible,
+    visible,
   } = useFeedback();
   const { start, stop, videoUri, setVideoUri, cleanup } = useScreenRecorder();
   const { granted, requestPermission } = useStoragePermission();
   const disableSubmit = !title || !message;
-  const [visible, setVisible] = useState<boolean>(true);
   const [isPending, setIsPending] = useState<boolean>(false);
   const [status, setStatus] = useState<'success' | 'failed' | undefined>(
     undefined,
@@ -88,12 +89,12 @@ const FeedbackModal = ({
   }, [isRecording, onClose, start, stop, toggleRecording]);
 
   const handleCapture = useCallback(async () => {
-    setVisible(false);
+    setModalVisible(false);
     await new Promise(res => setTimeout(res, 200));
     const shot = await captureScreen();
     setScreenshot(shot);
-    setVisible(true);
-  }, [setScreenshot]);
+    setModalVisible(true);
+  }, [setModalVisible, setScreenshot]);
 
   const handleCancelAndClear = useCallback(async () => {
     setTitle('');
@@ -164,7 +165,7 @@ const FeedbackModal = ({
     webhook,
   ]);
 
-  if (!granted || !visible) {
+  if (!granted) {
     return null;
   }
 
@@ -174,6 +175,8 @@ const FeedbackModal = ({
       transparent
       statusBarTranslucent
       navigationBarTranslucent
+      visible={visible}
+      onRequestClose={onClose}
     >
       <Pressable style={styles.overlay} onPress={onClose}>
         <View style={styles.modal}>

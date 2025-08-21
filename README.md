@@ -187,7 +187,7 @@ const config = {
 
 // you can add single or multiple supported configs
 // Default value for feedbackButtonPosition is bottom: 30 and right: 30
-import { FeedbackHubProvider } from 'react-native-feedback-hub';
+import { FeedbackHubProvider, useFeedbackHub } from 'react-native-feedback-hub';
 
 <FeedbackHubProvider 
   config={config}
@@ -200,6 +200,9 @@ import { FeedbackHubProvider } from 'react-native-feedback-hub';
 >
     <App/>
 </FeedbackHubProvider>
+
+// Hook to open feedback Hub from custom UI or from some specific place.
+const {isOpen, open, close} = useFeedbackHub();
 
 ```
 
