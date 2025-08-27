@@ -3,9 +3,16 @@
   "version": "1.1.2",
   "private": false,
   "description": "React Native feedback SDK with Slack, Jira, Discord and Microsoft Teams integration",
-  "main": "lib/commonjs/index.js",
+  "main": "lib/module/index.js",
   "module": "lib/module/index.js",
   "types": "lib/typescript/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./lib/module/index.js",
+      "default": "./lib/module/index.js",
+      "types": "./lib/typescript/index.d.ts"
+    }
+  },
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",
   "files": [
