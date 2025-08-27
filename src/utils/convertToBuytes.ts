@@ -1,4 +1,6 @@
 // Convert base64 to binary data for React Native
+// TS declaration only; assumes atob is available at runtime (Hermes/polyfill)
+declare const atob: (data: string) => string;
 
 export const convertToBytes = (fileData: string) =>{
     const binaryString = atob(fileData);

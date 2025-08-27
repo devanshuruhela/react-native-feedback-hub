@@ -1,4 +1,4 @@
-import { Bug, Circle } from 'lucide-react-native';
+import { BugIcon, CircleFilled } from '../svgs';
 import React, { useMemo } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { FeedbackButtonPositionType } from '../types/types';
@@ -33,9 +33,9 @@ const FloatingButton = ({
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       {isRecording ? (
-        <Circle size={24} color={colors.interactive.recording} fill={colors.interactive.recordingHover} />
+        <CircleFilled size={24} color={colors.interactive.recordingHover} />
       ) : (
-        <Bug size={24} color={colors.text.muted} />
+        <BugIcon size={24} color={colors.text.muted} />
       )}
     </TouchableOpacity>
   );

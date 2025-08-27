@@ -7,7 +7,7 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import { Circle, X, CircleCheck, CircleX } from 'lucide-react-native';
+import { XIcon, CircleFilled, CircleCheckIcon, CircleXIcon } from '../svgs';
 import { useFeedback } from '../context/FeedbackHubProvider';
 import captureScreen from '../utils/captureScreen';
 import { sendToSlack } from '../Integrations/slack';
@@ -90,7 +90,7 @@ const FeedbackModal = ({
 
   const handleCapture = useCallback(async () => {
     setModalVisible(false);
-    await new Promise(res => setTimeout(res, 200));
+    await new Promise<void>((resolve) => setTimeout(resolve, 200));
     const shot = await captureScreen();
     setScreenshot(shot);
     setModalVisible(true);
@@ -183,7 +183,7 @@ const FeedbackModal = ({
           <View style={styles.header}>
             <Text style={styles.title}>Feedback Hub</Text>
             <Pressable onPress={onClose}>
-              <X color={colors.text.muted} />
+              <XIcon color={colors.text.muted} />
             </Pressable>
           </View>
           <ScrollView ref={scrollViewRef}>
@@ -232,11 +232,7 @@ const FeedbackModal = ({
 
               {isRecording && (
                 <View style={styles.recordingIndicator}>
-                  <Circle
-                    size={12}
-                    color={colors.status.warning.text}
-                    fill={colors.status.warning.text}
-                  />
+                  <CircleFilled size={12} color={colors.status.warning.text} />
                   <Text style={styles.recordingLabel}>
                     Recording in progress...
                   </Text>
@@ -266,9 +262,9 @@ const FeedbackModal = ({
               {status && (
                 <View style={styles.statusNudge}>
                   {status === 'success' ? (
-                    <CircleCheck size={15} color={colors.status.success.text} />
+                    <CircleCheckIcon size={15} color={colors.status.success.text} />
                   ) : (
-                    <CircleX size={15} color={colors.status.error.text} />
+                    <CircleXIcon size={15} color={colors.status.error.text} />
                   )}
                   <Text
                     style={

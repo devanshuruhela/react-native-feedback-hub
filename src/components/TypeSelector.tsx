@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { FeedbackType } from '../types/types';
 import { ModalStyles as styles } from '../Styles/ModalStyle';
 import { colors } from '../tokens/colors';
-import { Bug, Lightbulb } from 'lucide-react-native';
+import { BugIcon, LightbulbIcon } from '../svgs';
 import { memo } from 'react';
 
 const TypeSelector = ({
@@ -17,7 +17,7 @@ const TypeSelector = ({
       style={[styles.typeButton, type === 'bug' && styles.activeBug]}
       onPress={() => setType('bug')}
     >
-      <Bug
+      <BugIcon
         size={16}
         color={type === 'bug' ? colors.status.error.text : colors.text.inverse}
       />
@@ -33,7 +33,7 @@ const TypeSelector = ({
       ]}
       onPress={() => setType('suggestion')}
     >
-      <Lightbulb
+      <LightbulbIcon
         size={16}
         color={
           type === 'suggestion'

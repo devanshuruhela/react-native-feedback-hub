@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
-import { X, Image as ImageIcon, Video as VideoIcon } from 'lucide-react-native';
+import { XIcon, ImageIcon, VideoIcon } from '../svgs';
 import { generateThumbnail } from '../utils/generateThumbnail';
 import { AttachmentStyles as styles } from '../Styles/AttachmentStyle';
 import { colors } from '../tokens/colors';
@@ -54,7 +54,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
             style={styles.removeIcon}
             onPress={onRemoveScreenshot}
           >
-            <X size={16} color={colors.text.white} />
+            <XIcon size={16} color={colors.text.white} />
           </TouchableOpacity>
         </View>
       )}
@@ -73,7 +73,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
             style={styles.removeIcon}
             onPress={handleRemoveRecording}
           >
-            <X size={16} color={colors.text.white} />
+            <XIcon size={16} color={colors.text.white} />
           </TouchableOpacity>
         </View>
       )}

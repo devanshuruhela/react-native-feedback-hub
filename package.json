@@ -3,8 +3,11 @@
   "version": "1.1.0",
   "private": false,
   "description": "React Native feedback SDK with Slack, Jira, Discord and Microsoft Teams integration",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/commonjs/index.js",
+  "module": "lib/module/index.js",
+  "types": "lib/typescript/index.d.ts",
+  "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
   "files": [
     "lib/",
     "README.md",
@@ -35,10 +38,10 @@
     "start": "react-native start",
     "test": "jest",
     "postinstall": "patch-package",
-    "build": "tsc -p tsconfig.build.json",
-    "clean": "rimraf lib/",
-    "prepublishOnly": "npm run clean && npm run build",
-    "prepare": "npm run build",
+    "build": "bob build",
+    "clean": "bob clean",
+    "prepublishOnly": "npm run clean && npm run build && rimraf \"lib/**/*.map\"",
+    "prepare": "bob build",
     "bump-patch": "npm version patch",
     "bump-minor": "npm version minor",
     "bump-major": "npm version major",
@@ -46,18 +49,17 @@
   },
   "peerDependencies": {
     "react": ">=17.0.0",
-    "react-native": ">=0.70.0",
-    "react-native-create-thumbnail": "^2.1.1",
-    "react-native-fs": "^2.20.0",
-    "react-native-record-screen": "^0.6.2",
-    "react-native-svg": ">=15.0.0",
-    "react-native-view-shot": "^4.0.3"
+    "react-native": ">=0.70.0"
   },
   "dependencies": {
     "axios": "^1.10.0",
-    "lucide-react-native": "^0.525.0",
     "mime": "^4.0.7",
-    "patch-package": "^8.0.0"
+    "patch-package": "^8.0.0",
+    "react-native-create-thumbnail": "^2.1.1",
+    "react-native-fs": "^2.20.0",
+    "react-native-record-screen": "^0.6.2",
+    "react-native-svg": "^15.12.1",
+    "react-native-view-shot": "^4.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -79,11 +81,7 @@
     "prettier": "2.8.8",
     "react": "19.1.0",
     "react-native": "0.80.1",
-    "react-native-create-thumbnail": "^2.1.1",
-    "react-native-fs": "^2.20.0",
-    "react-native-record-screen": "^0.6.2",
-    "react-native-svg": "^15.12.1",
-    "react-native-view-shot": "^4.0.3",
+    "react-native-builder-bob": "0.40.13",
     "react-test-renderer": "19.1.0",
     "rimraf": "^6.0.1",
     "typescript": "5.0.4"

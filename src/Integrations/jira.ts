@@ -3,6 +3,9 @@ import axios from 'axios';
 import { JIRA_API_ENDPOINTS } from '../utils/endpoints';
 import { getFileNameAndType } from '../utils/getFileNameAndType';
 
+// TS declaration only; assumes btoa is available at runtime (Hermes/polyfill)
+declare const btoa: (data: string) => string;
+
 // Helper function to get available issue types for the project
 const getProjectIssueTypes = async (config: JiraConfig) => {
   const { email, apiToken, projectKey, host } = config;

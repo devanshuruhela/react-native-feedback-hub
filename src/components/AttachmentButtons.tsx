@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { ModalStyles as styles } from '../Styles/ModalStyle';
 import { colors } from '../tokens/colors';
-import { Camera, Square, Video } from 'lucide-react-native';
+import { CameraIcon, SquareIcon, VideoIcon } from '../svgs';
 import { memo } from 'react';
 
 const Attachments = ({
@@ -20,7 +20,7 @@ const Attachments = ({
   <View style={styles.attachments}>
     {isScreenShotEnabled && (
       <TouchableOpacity style={styles.attachmentButton} onPress={handleCapture}>
-        <Camera size={16} color={colors.text.muted} />
+        <CameraIcon size={16} color={colors.text.muted} />
         <Text style={styles.attachmentText}> Screenshot</Text>
       </TouchableOpacity>
     )}
@@ -30,9 +30,9 @@ const Attachments = ({
         onPress={handleRecording}
       >
         {isRecording ? (
-          <Square size={16} color={colors.status.error.text} />
+          <SquareIcon size={16} color={colors.status.error.text} />
         ) : (
-          <Video size={16} color={colors.text.muted} />
+          <VideoIcon size={16} color={colors.text.muted} />
         )}
         <Text
           style={[styles.attachmentText, isRecording && styles.recordingText]}

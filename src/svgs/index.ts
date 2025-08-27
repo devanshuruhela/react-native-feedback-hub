@@ -1,0 +1,10 @@
+export { default as XIcon } from './XIcon';
+export { default as CameraIcon } from './CameraIcon';
+export { default as SquareIcon } from './SquareIcon';
+export { default as VideoIcon } from './VideoIcon';
+export { default as ImageIcon } from './ImageIcon';
+export { default as CircleFilled } from './CircleFilled';
+export { default as CircleCheckIcon } from './CircleCheckIcon';
+export { default as CircleXIcon } from './CircleXIcon';
+export { default as BugIcon } from './BugIcon';
+export { default as LightbulbIcon } from './LightbulbIcon';
