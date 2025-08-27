@@ -28,14 +28,10 @@ yarn add react-native-feedback-hub
 ```
 
 ### Peer Dependencies
+- react >= 17.0.0
+- react-native >= 0.70.0
 
-Make sure you have the required peer dependencies installed:
-
-```bash
-npm install react-native-svg react-native-fs react-native-view-shot react-native-record-screen react-native-create-thumbnail
-# or 
-yarn add react-native-svg react-native-fs react-native-view-shot react-native-record-screen react-native-create-thumbnail
-```
+> Note: Other libraries like `react-native-svg`, `react-native-fs`, `react-native-view-shot`, `react-native-record-screen`, and `react-native-create-thumbnail` are regular dependencies of this package and are installed automatically when you install `react-native-feedback-hub`.
 
 If IOS build fails due to react-native-record-screen:
 Use [Patch](https://github.com/devanshuruhela/react-native-feedback-hub/blob/main/patches/react-native-record-screen%2B0.6.2.patch)
