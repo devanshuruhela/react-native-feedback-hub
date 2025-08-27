@@ -9,7 +9,8 @@
   "react-native": "src/index.tsx",
   "source": "src/index.tsx",
   "files": [
-    "lib/",
+    "lib/**/*.js",
+    "lib/**/*.d.ts",
     "README.md",
     "LICENSE"
   ],
@@ -39,9 +40,9 @@
     "test": "jest",
     "postinstall": "patch-package",
     "build": "bob build",
-    "clean": "bob clean",
-    "prepublishOnly": "npm run clean && npm run build && rimraf \"lib/**/*.map\"",
-    "prepare": "bob build",
+    "clean": "rimraf lib",
+    "prepublishOnly": "npm run clean",
+    "prepack": "npm run build && rimraf --glob \"lib/**/*.map\"",
     "bump-patch": "npm version patch",
     "bump-minor": "npm version minor",
     "bump-major": "npm version major",

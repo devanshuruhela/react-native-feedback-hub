@@ -35,3 +35,6 @@ Thumbs.db
 !README.md
 !LICENSE
 !package.json
+
+# Exclude source maps from lib
+lib/**/*.map
