@@ -62,7 +62,6 @@
   "dependencies": {
     "axios": "^1.10.0",
     "mime": "^4.0.7",
-    "patch-package": "^8.0.0",
     "react-native-create-thumbnail": "^2.1.1",
     "react-native-fs": "^2.20.0",
     "react-native-record-screen": "^0.6.2",
@@ -92,7 +91,8 @@
     "react-native-builder-bob": "0.40.13",
     "react-test-renderer": "19.1.0",
     "rimraf": "^6.0.1",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "patch-package": "^8.0.0"
   },
   "engines": {
     "node": ">=18"
